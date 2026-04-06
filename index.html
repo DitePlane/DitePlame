@@ -1,2175 +1,1843 @@
- (cd "$(git rev-parse --show-toplevel)" && git apply --3way <<'EOF' 
-diff --git a/AGENTS.md b/AGENTS.md
-new file mode 100644
-index 0000000000000000000000000000000000000000..2ffac15bfe8af3b1ac27a043d75f379a65b718c4
---- /dev/null
-+++ b/AGENTS.md
-@@ -0,0 +1,23 @@
-+# AGENTS.md
-+
-+Scope: entire repository.
-+
-+## Editing rules
-+- Keep the site as a static, dependency-free project unless explicitly requested.
-+- Preserve accessibility and readability for Hindi/English mixed content.
-+- Do not remove legal disclaimer, terms, privacy/safety notes, or doctor-escalation section.
-+- Preserve SEO tags and JSON-LD unless replacing with a better validated equivalent.
-+
-+## SEO rules
-+- Maintain one canonical URL and keep it consistent with `sitemap.xml` and `robots.txt`.
-+- Keep FAQ content synchronized with FAQ JSON-LD where practical.
-+- Avoid keyword stuffing; prefer helpful, user-first copy.
-+
-+## Validation checklist (before commit)
-+- `index.html` has exactly one `<!DOCTYPE html>` and one closing `</html>`.
-+- `sitemap.xml` parses as valid XML.
-+- `robots.txt` includes a sitemap reference.
-+
-+## Commit expectations
-+- Use concise, descriptive commit messages.
-+- Mention user-visible changes in the final summary.
-diff --git a/README.md b/README.md
-new file mode 100644
-index 0000000000000000000000000000000000000000..4f86f734b6ace848c2e2f9b6e6582a4e4e7a7c76
---- /dev/null
-+++ b/README.md
-@@ -0,0 +1,39 @@
-+# SwasthyaSetu Wellness Guide
-+
-+A static Hindi-first health education website focused on sexual wellness, recovery, nutrition, fitness, skin-care habits, myth-busting, mental wellbeing, and doctor-escalation guidance.
-+
-+## Public Search Readiness (SEO)
-+
-+This project includes:
-+- On-page SEO metadata (`description`, `keywords`, `robots`, Open Graph, Twitter, canonical).
-+- Structured data (`WebSite` and `FAQPage` JSON-LD).
-+- Crawl/index files: `robots.txt` and `sitemap.xml`.
-+- Long-form informational content for search discoverability.
-+
-+## Files
-+
-+- `index.html` — full website (single-page app-like static layout).
-+- `robots.txt` — crawler rules + sitemap location.
-+- `sitemap.xml` — canonical URL list.
-+- `AGENTS.md` — contribution and editing rules for AI/code agents.
-+
-+## Run locally
-+
-+```bash
-+python3 -m http.server 4173
-+```
-+
-+Open: `http://127.0.0.1:4173`
-+
-+## Publish notes
-+
-+1. Deploy this repo to any static host (Netlify, Vercel static, GitHub Pages, Cloudflare Pages).
-+2. Keep canonical and sitemap domain aligned with your live domain.
-+3. Submit sitemap URL in Google Search Console and Bing Webmaster Tools.
-+4. Re-submit sitemap after major content updates.
-+
-+## Content intent
-+
-+- Educational purpose only.
-+- Not a replacement for diagnosis/treatment by licensed professionals.
-+- Designed for responsible, consent-aware, non-judgmental health education.
-diff --git a/index.html b/index.html
-index c1827f288dd398295f2be9c7e95a54f680a18c9e..2aac6ad363ee85a659dfb950d4bb17cd5cd44107 100644
---- a/index.html
-+++ b/index.html
-@@ -1,31 +1,46 @@
- <!DOCTYPE html>
- <html lang="hi">
- <head>
- <meta charset="UTF-8">
- <meta name="viewport" content="width=device-width, initial-scale=1.0">
--<title>Sampurna Swasthya Guide - Sexual Health & Recovery</title>
-+<meta name="description" content="SwasthyaSetu Wellness Guide ek detailed Hindi health portal hai jisme sexual wellness, sperm recovery, diet, exercise, skin care, myths vs facts, mental health aur doctor consultation ke practical steps diye gaye hain.">
-+<meta name="keywords" content="sexual health hindi, masturbation myths, sperm recovery diet, men wellness india, testosterone lifestyle, skin glow routine men, kegel exercise hindi, urologist consultation, semen health tips, ayurvedic male health">
-+<meta name="author" content="SwasthyaSetu Wellness Guide">
-+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
-+<meta name="theme-color" content="#0d3b2e">
-+<meta property="og:type" content="website">
-+<meta property="og:title" content="SwasthyaSetu Wellness Guide - Sexual Health, Recovery & Lifestyle">
-+<meta property="og:description" content="Hindi recovery guide: diet, exercise, sperm health, myths, mental wellness, legal safety notes, and when to see a doctor.">
-+<meta property="og:locale" content="hi_IN">
-+<meta property="og:site_name" content="SwasthyaSetu Wellness Guide">
-+<meta property="og:url" content="https://swasthyasetuguide.in/">
-+<meta property="twitter:card" content="summary_large_image">
-+<meta property="twitter:title" content="SwasthyaSetu Wellness Guide - Sexual Health, Recovery & Lifestyle">
-+<meta property="twitter:description" content="Sexual wellness, recovery, nutrition, safety, and mental health guidance in Hindi.">
-+<link rel="canonical" href="https://swasthyasetuguide.in/">
-+<title>SwasthyaSetu Wellness Guide - Sexual Health, Recovery & Lifestyle</title>
- <link href="https://fonts.googleapis.com/css2?family=Tiro+Devanagari+Hindi:ital@0;1&family=Baloo+2:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@300;400;500;600;700&display=swap" rel="stylesheet">
- <style>
-   :root {
-     --forest: #0d3b2e;
-     --emerald: #1a6b4a;
-     --mint: #2ecc71;
-     --lime: #a8e063;
-     --cream: #fdf6ec;
-     --warm: #f9f0e1;
-     --gold: #f0a500;
-     --amber: #e67e22;
-     --coral: #e74c3c;
-     --sky: #2980b9;
-     --navy: #1a3a5c;
-     --lavender: #7c5cbf;
-     --rose: #c0392b;
-     --text: #1a1a2e;
-     --muted: #5a6a7a;
-     --card-shadow: 0 8px 32px rgba(13,59,46,0.13);
-     --glow: 0 0 40px rgba(46,204,113,0.15);
-   }
- 
-   * { margin: 0; padding: 0; box-sizing: border-box; }
- 
-   html { scroll-behavior: smooth; }
-@@ -446,93 +461,127 @@
-     color: white; border: none; cursor: pointer;
-     font-size: 1.2rem; box-shadow: 0 4px 16px rgba(26,107,74,0.4);
-     opacity: 0; transition: opacity 0.3s; z-index: 150;
-     display: flex; align-items: center; justify-content: center;
-   }
-   .back-top.visible { opacity: 1; }
- 
-   /* ── ANIMATIONS ── */
-   @keyframes fadeDown {
-     from { opacity: 0; transform: translateY(-20px); }
-     to { opacity: 1; transform: translateY(0); }
-   }
-   .reveal {
-     opacity: 0; transform: translateY(30px);
-     transition: opacity 0.6s ease, transform 0.6s ease;
-   }
-   .reveal.visible { opacity: 1; transform: translateY(0); }
- 
-   /* ── RESPONSIVE ── */
-   @media (max-width: 768px) {
-     .myth-fact, .do-dont-grid { grid-template-columns: 1fr; }
-     .nav-links { display: none; }
-     .hero-stats { gap: 1rem; }
-   }
- </style>
-+<script type="application/ld+json">
-+{
-+  "@context": "https://schema.org",
-+  "@type": "WebSite",
-+  "name": "SwasthyaSetu Wellness Guide",
-+  "url": "https://swasthyasetuguide.in/",
-+  "inLanguage": "hi",
-+  "description": "Hindi guide for sexual health recovery, nutrition, exercise, and mental wellbeing."
-+}
-+</script>
-+<script type="application/ld+json">
-+{
-+  "@context": "https://schema.org",
-+  "@type": "FAQPage",
-+  "mainEntity": [
-+    {"@type":"Question","name":"Hafte mein kitni baar masturbation normal hai?","acceptedAnswer":{"@type":"Answer","text":"Hafte mein 2-4 baar kai logon ke liye normal hota hai, lekin individual differences important hain."}},
-+    {"@type":"Question","name":"Kya masturbation se testosterone kam hota hai?","acceptedAnswer":{"@type":"Answer","text":"Temporary hormonal fluctuations ho sakte hain lekin long-term testosterone par major negative effect commonly establish nahi hota."}},
-+    {"@type":"Question","name":"Sex ke baad kitna paani peena chahiye?","acceptedAnswer":{"@type":"Answer","text":"Hydration ke liye 2-3 gilaas paani helpful ho sakta hai, especially agar dehydration ho."}},
-+    {"@type":"Question","name":"Sperm count badhane ke liye kya karein?","acceptedAnswer":{"@type":"Answer","text":"Balanced diet, exercise, stress control, sleep, and smoking-alcohol reduction commonly recommended steps hain."}},
-+    {"@type":"Question","name":"Face glow ke liye sabse zaroori cheez kya hai?","acceptedAnswer":{"@type":"Answer","text":"Hydration, quality sleep, nutritious diet, aur sun protection primary factors hain."}},
-+    {"@type":"Question","name":"Kya Ashwagandha safe hai?","acceptedAnswer":{"@type":"Answer","text":"Generally many adults tolerate it, but existing conditions ya medications hone par doctor consultation zaroor karein."}},
-+    {"@type":"Question","name":"Masturbation band karne se kya fayda hoga?","acceptedAnswer":{"@type":"Answer","text":"Agar behavior compulsive ho to control karna focus aur routine improve kar sakta hai; moderate pattern mein strict abstinence sabke liye required nahi."}}
-+  ]
-+}
-+</script>
-+
- </head>
- <body>
- 
- <div class="progress-bar" id="progress"></div>
- 
- <!-- HERO -->
- <section class="hero">
-   <div class="hero-circles">
-     <span></span><span></span><span></span>
-   </div>
--  <div class="hero-badge">🌿 Sampurna Swasthya Guide</div>
-+  <div class="hero-badge">🌿 SwasthyaSetu Wellness Guide</div>
-   <h1>Sex & Masturbation ke<br><span>Baad Body Care</span></h1>
-   <p>Apni body ko samjho, sahi khaana khao, exercise karo aur face glow karo — sabkuch ek jagah</p>
-   <div class="hero-stats">
-     <div class="stat-chip">
-       <strong>90</strong>
-       <span>Din mein Sperm banta hai</span>
-     </div>
-     <div class="stat-chip">
-       <strong>20Cr+</strong>
-       <span>Sperm roz bante hain</span>
-     </div>
-     <div class="stat-chip">
-       <strong>8+</strong>
-       <span>Sections ki Poori Guide</span>
-     </div>
-   </div>
-   <div class="scroll-hint">Scroll karein</div>
- </section>
- 
- <!-- NAV -->
- <nav>
-   <div class="nav-inner">
--    <div class="nav-logo">🌿 Swasthya Guide</div>
-+    <div class="nav-logo">🌿 SwasthyaSetu</div>
-     <div class="nav-links">
-       <a href="#body-loss">Body Loss</a>
-       <a href="#sperm">Sperm</a>
--      <a href="#diet">Diet Plan</a>
-+      <a href="#diet">Diet</a>
-       <a href="#foods">Foods</a>
-       <a href="#exercise">Exercise</a>
-       <a href="#face">Face Care</a>
-+      <a href="#drinks">Drinks</a>
-       <a href="#myths">Myths</a>
-+      <a href="#dodont">Do/Don't</a>
-+      <a href="#supplements">Supplements</a>
-+      <a href="#routine">Routine</a>
-+      <a href="#mind">Mind</a>
-+      <a href="#doctor">Doctor</a>
-+      <a href="#knowledge-hub">Guide</a>
-       <a href="#faq">FAQ</a>
-+      <a href="#legal">Legal</a>
-     </div>
-   </div>
- </nav>
- 
- <!-- SECTION 1: BODY LOSS -->
- <section class="section" id="body-loss">
-   <div class="container">
-     <div class="section-title reveal">
-       <div class="tag">Section 01</div>
-       <h2>Body Mein Kya Kami Hoti Hai?</h2>
-       <p>Sex / Masturbation ke baad in poshan tattvon ki kami hoti hai</p>
-     </div>
-     <div class="nutrient-grid reveal">
-       <div class="nutrient-card">
-         <div class="icon">⚡</div>
-         <h4>Zinc (जिंक)</h4>
-         <p>Sabse zyaada kharach hota hai — immunity aur sperm health ke liye zaroori</p>
-         <span class="amount">3–5mg per ejaculation</span>
-       </div>
-       <div class="nutrient-card">
-         <div class="icon">💪</div>
-         <h4>Protein (प्रोटीन)</h4>
-         <p>Muscles, energy aur body repair ke liye</p>
-         <span class="amount">~5g per ejaculation</span>
-       </div>
-@@ -1451,50 +1500,71 @@
-           <span>🌇</span> 5:00 – 6:00 PM — Shaam
-         </div>
-         <div class="routine-content">
-           <span class="routine-tag">🥜 Mixed nuts</span>
-           <span class="routine-tag">🥥 Naariyal paani</span>
-           <span class="routine-tag">🚶 Evening walk</span>
-           <span class="routine-tag">🍵 Green tea</span>
-         </div>
-       </div>
-       <div class="routine-block">
-         <div class="routine-time" style="background:linear-gradient(135deg,#1abc9c,#148f77)">
-           <span>🌙</span> 8:00 – 10:00 PM — Raat + Neend
-         </div>
-         <div class="routine-content">
-           <span class="routine-tag">🍛 Halka khaana</span>
-           <span class="routine-tag">🧴 Night face routine</span>
-           <span class="routine-tag">🥛 Haldi dudh</span>
-           <span class="routine-tag">📵 Phone band</span>
-           <span class="routine-tag">😴 10-11 baje tak soyein</span>
-         </div>
-       </div>
-     </div>
-   </div>
- </section>
- 
-+
-+<!-- SECTION: LONG FORM KNOWLEDGE HUB -->
-+<section class="section" id="knowledge-hub">
-+  <div class="container">
-+    <div class="section-title reveal">
-+      <div class="tag">SEO Knowledge Hub</div>
-+      <h2>Complete Sexual Wellness Knowledge Hub (Hindi)</h2>
-+      <p>Search-friendly long-form content jo public users ko practical aur responsible health information deta hai.</p>
-+    </div>
-+
-+    <div class="card reveal" style="line-height:1.9;">
-+      <p style="font-size:0.95rem;color:var(--muted);">Yeh section specially is tarah likha gaya hai ki user jab Google par "sexual health in Hindi", "masturbation myths", "sperm recovery diet", "men skin glow routine", "testosterone lifestyle tips", "kegel exercise guide", "when to see urologist", "male fertility natural support", ya "night routine for better recovery" jaise queries search kare, to unhe clear, practical aur balanced guidance mile. Sexual health ko sirf ek topic na samjhein; yeh sleep quality, stress level, hydration, hormonal balance, physical activity, nutrition quality, relationship behavior, aur mental wellness ka combined result hota hai. Isi wajah se is website mein meal timing, hydration plan, micronutrient support, exercise modules, breathing practices, myth-busting, and doctor consultation triggers ko ek hi roadmap mein organize kiya gaya hai.</p>
-+      <p style="font-size:0.95rem;color:var(--muted);margin-top:1rem;">Agar aapko fatigue, low mood, concentration issues, ya self-confidence drop feel ho raha hai, to pehla step panic nahi balki routine audit hona chahiye. Har din ke 24 ghante mein aapka recovery system teen jagah win ya lose karta hai: (1) sleep window, (2) food quality, (3) stress response. Is guide ka core principle hai: "consistency over intensity." 2 din ka extreme diet ya 1 hafte ka heavy workout usually sustainable nahi hota, lekin daily 30-minute movement, protein-rich breakfast, and 7-8 hours sleep long-term hormonal health, sexual performance confidence, and skin quality ke liye zyada effective framework deta hai.</p>
-+      <p style="font-size:0.95rem;color:var(--muted);margin-top:1rem;">Digital behavior bhi sexual wellbeing ka major factor hai. Excessive scrolling, late-night screen exposure, and compulsive content consumption dopamine dysregulation create kar sakte hain jisse motivation, focus, aur sleep architecture affect hota hai. Isi liye healthy digital hygiene rules add kiye gaye hain: fixed usage slots, no-screen bedtime buffer, and replacement actions like walking, journaling, hydration break, and breathwork. Yeh simple interventions urge intensity ko reduce karte hain aur self-control ko improve karte hain.</p>
-+      <p style="font-size:0.95rem;color:var(--muted);margin-top:1rem;">Public awareness ke liye ek aur important point: myths se zyada damage kabhi-kabhi guilt karta hai. Myths jaise "masturbation se body permanently weak hoti hai" ya "height ruk jaati hai" scientific support ke bina fear create karte hain. Real health outcomes diet deficiency, sleep debt, stress overload, sedentariness, smoking, excessive alcohol, and untreated medical conditions par depend karte hain. Agar symptoms persistent hain—jaise pain, burning urination, semen abnormality, severe anxiety, erectile dysfunction over months—tab self-treatment delay karne ke bajay professional consultation best step hai.</p>
-+      <p style="font-size:0.95rem;color:var(--muted);margin-top:1rem;">Is website ka public benefit objective simple hai: shame kam karo, evidence-oriented routine follow karo, and timely help lo. Healthy lifestyle ka matlab perfection nahi; iska matlab reliable daily habits hai jo energy, confidence, recovery, and long-term reproductive health ko support karein. Consent, respect, safe relationships, and emotional maturity har sexual wellness framework ka foundation hain. Agar aap is page ko educational purpose se share kar rahe hain, to ensure karein ki readers ko responsible message mile: self-awareness + balanced routine + medical guidance when needed.</p>
-+    </div>
-+  </div>
-+</section>
-+
-+
- <!-- FAQ -->
- <section class="section section-alt" id="faq">
-   <div class="container">
-     <div class="section-title reveal">
-       <div class="tag">Section 12</div>
-       <h2>Aksar Pooche Jaane Waale Sawaal</h2>
-       <p>Aapke sabse common questions ke jawab</p>
-     </div>
-     <div style="max-width:800px;margin:0 auto;" class="reveal">
- 
-       <div class="faq-item">
-         <div class="faq-q" onclick="toggleFaq(this)">
-           Hafte mein kitni baar masturbation normal hai?
-           <span class="arrow">▼</span>
-         </div>
-         <div class="faq-a">
-           Hafte mein 2–4 baar bilkul normal aur healthy hai. Koi fixed number nahi hai — har insaan alag hota hai. Jab tak aap physically aur mentally theek feel kar rahe hain, koi baat nahi. Agar roz 3–4+ baar ho raha hai aur aap rok nahi pa rahe, tab doctor se milein.
-         </div>
-       </div>
- 
-       <div class="faq-item">
-         <div class="faq-q" onclick="toggleFaq(this)">
-           Kya masturbation se testosterone kam hota hai?
-           <span class="arrow">▼</span>
-         </div>
-@@ -1560,1698 +1630,207 @@
- <!-- FINAL FORMULA -->
- <section class="section" style="padding:3rem 0;">
-   <div class="container">
-     <div class="reveal">
-       <div class="highlight-box">
-         <h3>🎯 Fresh & Glowing Rehne Ka Formula</h3>
-         <p>Sirf itna karo — 3 hafte mein fark dikhega!</p>
-         <div class="formula">
-           <div class="formula-item">😴 Achhi Neend</div>
-           <div class="formula-plus">+</div>
-           <div class="formula-item">💧 8 Gilaas Paani</div>
-           <div class="formula-plus">+</div>
-           <div class="formula-item">🥗 Accha Khaana</div>
-           <div class="formula-plus">+</div>
-           <div class="formula-item">🏃 Exercise</div>
-           <div class="formula-plus">+</div>
-           <div class="formula-item">🌵 Face Routine</div>
-           <div class="formula-plus">=</div>
-           <div class="formula-item" style="background:var(--lime);color:var(--forest);font-weight:700;">✨ Perfect You!</div>
-         </div>
-       </div>
-     </div>
-   </div>
- </section>
- 
--<!-- FOOTER -->
--<footer>
--  <strong>🌿 Sampurna Swasthya Guide</strong>
--  <div class="disclaimer">
--    ⚠️ Yeh website sirf educational purposes ke liye hai. Kisi bhi specific health problem ya medical condition ke liye kripya qualified doctor ya healthcare professional se milein. Yahan di gayi jaankari professional medical advice ka replacement nahi hai.
--  </div>
--</footer>
- 
--<button class="back-top" id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
- 
--<script>
--  // Progress bar
--  window.addEventListener('scroll', () => {
--    const scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
--    document.getElementById('progress').style.width = scrolled + '%';
--    document.getElementById('backTop').classList.toggle('visible', window.scrollY > 400);
--  });
-+<!-- SECTION 13: MENTAL WELLBEING -->
-+<section class="section section-alt" id="mind">
-+  <div class="container">
-+    <div class="section-title reveal">
-+      <div class="tag">Section 13</div>
-+      <h2>Mental Health & Digital Balance</h2>
-+      <p>Healthy mind ke bina healthy body possible nahi — practical steps follow karein</p>
-+    </div>
- 
--  // Reveal on scroll
--  const observer = new IntersectionObserver((entries) => {
--    entries.forEach((entry, i) => {
--      if (entry.isIntersecting) {
--        setTimeout(() => entry.target.classList.add('visible'), i * 80);
--      }
--    });
--  }, { threshold: 0.1 });
-+    <div class="grid-3 reveal">
-+      <div class="card" style="border-top:4px solid var(--lavender)">
-+        <div class="card-icon" style="background:#f3ecff;color:var(--lavender)">🧠</div>
-+        <h4 style="font-family:'Baloo 2';color:var(--forest);font-size:1.05rem;">Guilt-Free Understanding</h4>
-+        <p style="font-size:0.88rem;color:var(--muted);margin-top:0.45rem;line-height:1.7;">Moderate masturbation ek normal biological behavior ho sakta hai. Excessive guilt anxiety ko badhata hai, jo mood aur confidence ko negatively impact karta hai.</p>
-+      </div>
- 
--  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-+      <div class="card" style="border-top:4px solid var(--sky)">
-+        <div class="card-icon" style="background:#e8f4fb;color:var(--sky)">📵</div>
-+        <h4 style="font-family:'Baloo 2';color:var(--forest);font-size:1.05rem;">Porn Hygiene Rules</h4>
-+        <p style="font-size:0.88rem;color:var(--muted);margin-top:0.45rem;line-height:1.7;">Agar pornography use karte hain, to limits set karein: fixed time, no late-night binge, and no use during stress. Real relationships aur daily productivity ko priority dein.</p>
-+      </div>
- 
--  // FAQ toggle
--  function toggleFaq(el) {
--    const answer = el.nextElementSibling;
--    const isOpen = el.classList.contains('open');
--    document.querySelectorAll('.faq-q').forEach(q => {
--      q.classList.remove('open');
--      q.nextElementSibling.classList.remove('show');
--    });
--    if (!isOpen) {
--      el.classList.add('open');
--      answer.classList.add('show');
--    }
--  }
--</script>
--</body>
--</html><!DOCTYPE html>
--<html lang="hi">
--<head>
--<meta charset="UTF-8">
--<meta name="viewport" content="width=device-width, initial-scale=1.0">
--<title>Sampurna Swasthya Guide - Sexual Health & Recovery</title>
--<link href="https://fonts.googleapis.com/css2?family=Tiro+Devanagari+Hindi:ital@0;1&family=Baloo+2:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@300;400;500;600;700&display=swap" rel="stylesheet">
--<style>
--  :root {
--    --forest: #0d3b2e;
--    --emerald: #1a6b4a;
--    --mint: #2ecc71;
--    --lime: #a8e063;
--    --cream: #fdf6ec;
--    --warm: #f9f0e1;
--    --gold: #f0a500;
--    --amber: #e67e22;
--    --coral: #e74c3c;
--    --sky: #2980b9;
--    --navy: #1a3a5c;
--    --lavender: #7c5cbf;
--    --rose: #c0392b;
--    --text: #1a1a2e;
--    --muted: #5a6a7a;
--    --card-shadow: 0 8px 32px rgba(13,59,46,0.13);
--    --glow: 0 0 40px rgba(46,204,113,0.15);
--  }
-+      <div class="card" style="border-top:4px solid var(--mint)">
-+        <div class="card-icon" style="background:#e9fbf0;color:var(--emerald)">🗓️</div>
-+        <h4 style="font-family:'Baloo 2';color:var(--forest);font-size:1.05rem;">7-Day Reset Plan</h4>
-+        <p style="font-size:0.88rem;color:var(--muted);margin-top:0.45rem;line-height:1.7;">1 week ke liye sleep fixed rakhein, 30-min workout daily karein, sugar reduce karein, aur phone-free morning start karein. Isse urge control aur energy dono improve hoti hain.</p>
-+      </div>
-+    </div>
- 
--  * { margin: 0; padding: 0; box-sizing: border-box; }
-+    <div style="margin-top:1.6rem;" class="reveal">
-+      <div class="card" style="background:linear-gradient(135deg,#f9fff6,#effcf8);border:1px solid rgba(46,204,113,0.25)">
-+        <h3 style="font-family:'Baloo 2';color:var(--forest);font-size:1.2rem;">🔁 Habit Replacement Formula</h3>
-+        <p style="font-size:0.9rem;color:var(--muted);margin-top:0.4rem;">Urge aaye to direct willpower par depend mat karein — replacement action use karein:</p>
-+        <div class="formula" style="margin-top:1rem;">
-+          <div class="formula-item" style="background:#fff;color:var(--forest)">⏱️ 5-min Pause</div>
-+          <div class="formula-plus">+</div>
-+          <div class="formula-item" style="background:#fff;color:var(--forest)">🚶 Short Walk</div>
-+          <div class="formula-plus">+</div>
-+          <div class="formula-item" style="background:#fff;color:var(--forest)">💧 Water</div>
-+          <div class="formula-plus">+</div>
-+          <div class="formula-item" style="background:#fff;color:var(--forest)">📔 Journal</div>
-+          <div class="formula-plus">=</div>
-+          <div class="formula-item" style="background:var(--lime);color:var(--forest);font-weight:700;">✅ Control Back</div>
-+        </div>
-+      </div>
-+    </div>
-+  </div>
-+</section>
- 
--  html { scroll-behavior: smooth; }
-+<!-- SECTION 14: WHEN TO SEE DOCTOR -->
-+<section class="section" id="doctor">
-+  <div class="container">
-+    <div class="section-title reveal">
-+      <div class="tag">Section 14</div>
-+      <h2>Kab Doctor Se Milna Zaroori Hai?</h2>
-+      <p>In symptoms ko ignore na karein — early check-up best hai</p>
-+    </div>
- 
--  body {
--    font-family: 'Noto Sans Devanagari', 'Baloo 2', sans-serif;
--    background: var(--cream);
--    color: var(--text);
--    overflow-x: hidden;
--  }
-+    <div class="grid-2 reveal">
-+      <div class="card" style="border-left:5px solid var(--coral)">
-+        <h4 style="font-family:'Baloo 2';color:var(--rose);font-size:1.05rem;">🚨 Red Flag Symptoms</h4>
-+        <ul style="margin-top:0.8rem;list-style:none;display:flex;flex-direction:column;gap:0.5rem;color:var(--muted);font-size:0.9rem;">
-+          <li>• Semen mein blood dikhna</li>
-+          <li>• Testicle pain jo 24 ghante se zyaada rahe</li>
-+          <li>• Burning urination ya repeated UTI symptoms</li>
-+          <li>• Erectile problem jo 3+ mahine tak continue ho</li>
-+          <li>• Severe anxiety, compulsive behavior, guilt/depression</li>
-+        </ul>
-+      </div>
- 
--  /* ── HERO ── */
--  .hero {
--    min-height: 100vh;
--    background: linear-gradient(135deg, var(--forest) 0%, #0a4d36 40%, #16613e 70%, var(--emerald) 100%);
--    display: flex; flex-direction: column;
--    align-items: center; justify-content: center;
--    text-align: center; padding: 2rem;
--    position: relative; overflow: hidden;
--  }
--  .hero::before {
--    content: '';
--    position: absolute; inset: 0;
--    background: radial-gradient(ellipse at 20% 50%, rgba(46,204,113,0.12) 0%, transparent 60%),
--                radial-gradient(ellipse at 80% 20%, rgba(168,224,99,0.08) 0%, transparent 50%);
--  }
--  .hero-circles {
--    position: absolute; inset: 0; overflow: hidden; pointer-events: none;
--  }
--  .hero-circles span {
--    position: absolute; border-radius: 50%;
--    border: 1px solid rgba(46,204,113,0.15);
--    animation: pulse-ring 6s ease-in-out infinite;
--  }
--  .hero-circles span:nth-child(1) { width:200px;height:200px;top:-60px;right:-40px;animation-delay:0s; }
--  .hero-circles span:nth-child(2) { width:350px;height:350px;bottom:-100px;left:-80px;animation-delay:2s; }
--  .hero-circles span:nth-child(3) { width:120px;height:120px;top:40%;left:5%;animation-delay:4s; }
--  @keyframes pulse-ring {
--    0%,100% { transform: scale(1); opacity: 0.4; }
--    50% { transform: scale(1.08); opacity: 0.8; }
--  }
-+      <div class="card" style="border-left:5px solid var(--emerald)">
-+        <h4 style="font-family:'Baloo 2';color:var(--emerald);font-size:1.05rem;">🩺 Kis Specialist Se Milen?</h4>
-+        <ul style="margin-top:0.8rem;list-style:none;display:flex;flex-direction:column;gap:0.5rem;color:var(--muted);font-size:0.9rem;">
-+          <li>• Urologist: pain, swelling, semen/urine issues</li>
-+          <li>• Andrologist: male fertility and hormones</li>
-+          <li>• Dermatologist: acne/skin pigmentation issues</li>
-+          <li>• Psychiatrist/Psychologist: anxiety, compulsive habits</li>
-+          <li>• Dietitian: recovery-focused meal personalization</li>
-+        </ul>
-+      </div>
-+    </div>
- 
--  .hero-badge {
--    display: inline-block;
--    background: rgba(46,204,113,0.2);
--    border: 1px solid rgba(46,204,113,0.4);
--    color: var(--lime);
--    font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase;
--    padding: 0.4rem 1.2rem; border-radius: 50px;
--    margin-bottom: 1.5rem;
--    animation: fadeDown 0.8s ease;
--  }
--  .hero h1 {
--    font-family: 'Baloo 2', sans-serif;
--    font-size: clamp(2.2rem, 6vw, 4.5rem);
--    font-weight: 800; color: white;
--    line-height: 1.15; margin-bottom: 1rem;
--    animation: fadeDown 1s ease 0.2s both;
--  }
--  .hero h1 span { color: var(--lime); }
--  .hero p {
--    font-size: clamp(1rem, 2.5vw, 1.25rem);
--    color: rgba(255,255,255,0.75);
--    max-width: 650px; margin-bottom: 2.5rem;
--    animation: fadeDown 1s ease 0.4s both;
--  }
--  .hero-stats {
--    display: flex; gap: 2rem; flex-wrap: wrap; justify-content: center;
--    animation: fadeDown 1s ease 0.6s both;
--  }
--  .stat-chip {
--    background: rgba(255,255,255,0.1);
--    border: 1px solid rgba(255,255,255,0.2);
--    backdrop-filter: blur(10px);
--    padding: 0.7rem 1.4rem; border-radius: 12px;
--    color: white; text-align: center;
--  }
--  .stat-chip strong { display: block; font-size: 1.6rem; color: var(--lime); font-family: 'Baloo 2'; }
--  .stat-chip span { font-size: 0.8rem; opacity: 0.8; }
-+    <div style="margin-top:1.4rem;" class="reveal">
-+      <div class="highlight-box">
-+        <h3>✅ Early Consultation = Better Recovery</h3>
-+        <p>Self-diagnosis se bachhein. Agar symptoms persistent hain, to 1 professional visit aapki uncertainty aur stress dono kam kar sakti hai.</p>
-+      </div>
-+    </div>
-+  </div>
-+</section>
- 
--  .scroll-hint {
--    position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
--    color: rgba(255,255,255,0.5); font-size: 0.8rem;
--    display: flex; flex-direction: column; align-items: center; gap: 0.4rem;
--    animation: bounce 2s infinite;
--  }
--  .scroll-hint::after {
--    content: '▼'; font-size: 1rem;
--  }
--  @keyframes bounce { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(6px)} }
- 
--  /* ── NAV ── */
--  nav {
--    position: sticky; top: 0; z-index: 100;
--    background: rgba(13,59,46,0.97);
--    backdrop-filter: blur(20px);
--    border-bottom: 1px solid rgba(46,204,113,0.2);
--    padding: 0 1rem;
--  }
--  .nav-inner {
--    max-width: 1100px; margin: 0 auto;
--    display: flex; align-items: center; justify-content: space-between;
--    height: 58px;
--  }
--  .nav-logo { color: var(--lime); font-family: 'Baloo 2'; font-weight: 800; font-size: 1.2rem; }
--  .nav-links {
--    display: flex; gap: 0.2rem; flex-wrap: wrap;
--  }
--  .nav-links a {
--    color: rgba(255,255,255,0.7);
--    text-decoration: none; font-size: 0.82rem;
--    padding: 0.4rem 0.75rem; border-radius: 6px;
--    transition: all 0.2s;
--  }
--  .nav-links a:hover { color: white; background: rgba(46,204,113,0.2); }
- 
--  /* ── LAYOUT ── */
--  .container { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; }
--  .section { padding: 5rem 0; }
--  .section-alt { background: var(--warm); }
- 
--  .section-title {
--    text-align: center; margin-bottom: 3rem;
--  }
--  .section-title .tag {
--    display: inline-block;
--    background: linear-gradient(135deg, var(--emerald), var(--mint));
--    color: white; font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase;
--    padding: 0.3rem 1rem; border-radius: 50px; margin-bottom: 0.8rem;
--  }
--  .section-title h2 {
--    font-family: 'Baloo 2', sans-serif; font-size: clamp(1.8rem, 4vw, 2.6rem);
--    font-weight: 800; color: var(--forest);
--  }
--  .section-title p { color: var(--muted); margin-top: 0.5rem; font-size: 1rem; }
-+<!-- SECTION 15: LEGAL & TERMS -->
-+<section class="section section-alt" id="legal">
-+  <div class="container">
-+    <div class="section-title reveal">
-+      <div class="tag">Section 15</div>
-+      <h2>Disclaimer, Terms & Privacy Notes</h2>
-+      <p>Public users ke liye clear legal aur safety guidelines</p>
-+    </div>
- 
--  /* ── CARDS ── */
--  .card {
--    background: white; border-radius: 18px;
--    box-shadow: var(--card-shadow);
--    padding: 2rem; transition: transform 0.3s, box-shadow 0.3s;
--    border: 1px solid rgba(46,204,113,0.1);
--  }
--  .card:hover { transform: translateY(-4px); box-shadow: 0 16px 48px rgba(13,59,46,0.18); }
-+    <div class="grid-2 reveal">
-+      <div class="card" style="border-left:5px solid var(--amber)">
-+        <h3 style="font-family:'Baloo 2';color:var(--forest);font-size:1.15rem;">⚠️ Medical Disclaimer</h3>
-+        <ul style="margin-top:0.8rem;list-style:none;display:flex;flex-direction:column;gap:0.45rem;color:var(--muted);font-size:0.9rem;line-height:1.7;">
-+          <li>• Yeh website educational information provide karti hai; diagnosis ya treatment prescribe nahi karti.</li>
-+          <li>• Emergency symptoms (severe pain, bleeding, fever, suicidal thoughts) mein turant nearest hospital/doctor se contact karein.</li>
-+          <li>• Supplements, herbs, ya home remedies start karne se pehle licensed doctor se consult karein.</li>
-+          <li>• Individual health conditions alag hoti hain; generalized content ko personal medical advice na samjhein.</li>
-+        </ul>
-+      </div>
- 
--  .card-icon {
--    width: 52px; height: 52px; border-radius: 14px;
--    display: flex; align-items: center; justify-content: center;
--    font-size: 1.5rem; margin-bottom: 1rem;
--  }
-+      <div class="card" style="border-left:5px solid var(--sky)">
-+        <h3 style="font-family:'Baloo 2';color:var(--forest);font-size:1.15rem;">📜 Terms of Use (T&C)</h3>
-+        <ul style="margin-top:0.8rem;list-style:none;display:flex;flex-direction:column;gap:0.45rem;color:var(--muted);font-size:0.9rem;line-height:1.7;">
-+          <li>• Content ka use personal learning ke liye karein; commercial reuse ke liye prior permission required hai.</li>
-+          <li>• Website par di gayi tips follow karna user ki responsibility par hai; outcomes person-to-person vary karte hain.</li>
-+          <li>• Harmful, abusive, ya misleading reposting strictly prohibited hai.</li>
-+          <li>• Site content time-to-time update ho sakta hai; latest guidance ke liye regular review karein.</li>
-+        </ul>
-+      </div>
-+    </div>
- 
--  /* ── GRID ── */
--  .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
--  .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; }
--  .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.2rem; }
--
--  /* ── BODY LOSS TABLE ── */
--  .nutrient-grid {
--    display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem;
--  }
--  .nutrient-card {
--    background: white; border-radius: 16px; padding: 1.4rem 1rem;
--    text-align: center; box-shadow: var(--card-shadow);
--    border-top: 4px solid var(--mint);
--    transition: transform 0.2s;
--  }
--  .nutrient-card:hover { transform: translateY(-3px); }
--  .nutrient-card .icon { font-size: 2rem; margin-bottom: 0.6rem; }
--  .nutrient-card h4 { font-size: 1rem; color: var(--forest); font-weight: 700; }
--  .nutrient-card p { font-size: 0.82rem; color: var(--muted); margin-top: 0.3rem; }
--  .nutrient-card .amount {
--    display: inline-block; margin-top: 0.5rem;
--    background: linear-gradient(135deg, var(--emerald), var(--mint));
--    color: white; font-size: 0.72rem; padding: 0.2rem 0.7rem; border-radius: 50px;
--  }
--
--  /* ── SPERM TIMELINE ── */
--  .timeline {
--    position: relative; padding-left: 2.5rem;
--  }
--  .timeline::before {
--    content: ''; position: absolute; left: 10px; top: 0; bottom: 0;
--    width: 2px; background: linear-gradient(to bottom, var(--mint), var(--lime), var(--gold));
--  }
--  .tl-item {
--    position: relative; margin-bottom: 1.8rem;
--  }
--  .tl-dot {
--    position: absolute; left: -2rem; top: 0.3rem;
--    width: 16px; height: 16px; border-radius: 50%;
--    background: var(--mint); border: 3px solid white;
--    box-shadow: 0 0 0 3px var(--mint);
--  }
--  .tl-item h4 { font-size: 1rem; font-weight: 700; color: var(--forest); }
--  .tl-item p { font-size: 0.9rem; color: var(--muted); margin-top: 0.3rem; }
--  .tl-item .days {
--    display: inline-block; background: var(--emerald); color: white;
--    font-size: 0.8rem; padding: 0.2rem 0.8rem; border-radius: 50px;
--    margin-top: 0.4rem; font-weight: 600;
--  }
--
--  /* ── DIET PLAN ── */
--  .meal-card {
--    border-radius: 18px; overflow: hidden;
--    box-shadow: var(--card-shadow); transition: transform 0.3s;
--  }
--  .meal-card:hover { transform: translateY(-4px); }
--  .meal-header {
--    padding: 1.2rem 1.5rem;
--    display: flex; align-items: center; gap: 1rem;
--  }
--  .meal-header .meal-icon { font-size: 2rem; }
--  .meal-header h3 { color: white; font-family: 'Baloo 2'; font-size: 1.1rem; font-weight: 700; }
--  .meal-header span { color: rgba(255,255,255,0.75); font-size: 0.82rem; }
--  .meal-body { background: white; padding: 1.4rem 1.5rem; }
--  .meal-items { list-style: none; }
--  .meal-items li {
--    padding: 0.5rem 0; border-bottom: 1px solid #f0f0f0;
--    font-size: 0.92rem; display: flex; align-items: center; gap: 0.6rem;
--  }
--  .meal-items li:last-child { border-bottom: none; }
--  .meal-items li::before { content: '✓'; color: var(--mint); font-weight: 700; }
--
--  /* ── FOODS ── */
--  .food-card {
--    background: white; border-radius: 16px; padding: 1.4rem;
--    box-shadow: var(--card-shadow); text-align: center;
--    transition: all 0.3s; border: 2px solid transparent;
--    cursor: default;
--  }
--  .food-card:hover { border-color: var(--mint); transform: translateY(-4px); }
--  .food-card .food-emoji { font-size: 2.5rem; margin-bottom: 0.6rem; }
--  .food-card h4 { font-size: 0.95rem; font-weight: 700; color: var(--forest); }
--  .food-card p { font-size: 0.82rem; color: var(--muted); margin-top: 0.3rem; }
--  .food-card .benefit {
--    display: inline-block; margin-top: 0.6rem;
--    background: var(--lime); color: var(--forest);
--    font-size: 0.72rem; font-weight: 600;
--    padding: 0.2rem 0.7rem; border-radius: 50px;
--  }
--
--  /* ── EXERCISE ── */
--  .exercise-card {
--    background: white; border-radius: 18px; padding: 1.5rem;
--    box-shadow: var(--card-shadow); display: flex; gap: 1rem;
--    align-items: flex-start; transition: transform 0.3s;
--    border-left: 5px solid var(--mint);
--  }
--  .exercise-card:hover { transform: translateX(4px); }
--  .exercise-card .ex-icon {
--    font-size: 2rem; background: var(--warm);
--    width: 52px; height: 52px; border-radius: 14px;
--    display: flex; align-items: center; justify-content: center;
--    flex-shrink: 0;
--  }
--  .exercise-card h4 { font-size: 1rem; font-weight: 700; color: var(--forest); }
--  .exercise-card .sets { color: var(--amber); font-size: 0.82rem; font-weight: 600; margin-top: 0.2rem; }
--  .exercise-card p { font-size: 0.88rem; color: var(--muted); margin-top: 0.3rem; }
--
--  /* ── FACE CARE ── */
--  .step-card {
--    background: white; border-radius: 16px; padding: 1.4rem;
--    box-shadow: var(--card-shadow); position: relative;
--    overflow: hidden;
--  }
--  .step-num {
--    position: absolute; top: -10px; right: -10px;
--    width: 50px; height: 50px; border-radius: 50%;
--    background: linear-gradient(135deg, var(--lavender), #9b59b6);
--    color: white; font-size: 1.3rem; font-weight: 800; font-family: 'Baloo 2';
--    display: flex; align-items: center; justify-content: center;
--  }
--  .step-card h4 { font-size: 1rem; font-weight: 700; color: var(--forest); margin-bottom: 0.4rem; }
--  .step-card p { font-size: 0.88rem; color: var(--muted); }
--
--  /* ── MYTHS vs FACTS ── */
--  .myth-fact {
--    display: grid; grid-template-columns: 1fr 1fr; gap: 0;
--    border-radius: 18px; overflow: hidden; box-shadow: var(--card-shadow);
--  }
--  .myth-side { background: #fff5f5; padding: 1.5rem; }
--  .fact-side { background: #f0fdf6; padding: 1.5rem; }
--  .myth-side h4 { color: var(--coral); font-family: 'Baloo 2'; font-size: 1rem; margin-bottom: 0.8rem; }
--  .fact-side h4 { color: var(--emerald); font-family: 'Baloo 2'; font-size: 1rem; margin-bottom: 0.8rem; }
--  .myth-side p, .fact-side p { font-size: 0.88rem; color: var(--muted); }
--
--  /* ── DO DONT ── */
--  .do-dont-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
--  .do-list, .dont-list { border-radius: 18px; overflow: hidden; }
--  .list-header {
--    padding: 1rem 1.5rem; font-family: 'Baloo 2'; font-size: 1.1rem; font-weight: 700; color: white;
--    display: flex; align-items: center; gap: 0.6rem;
--  }
--  .do-list .list-header { background: linear-gradient(135deg, var(--emerald), var(--mint)); }
--  .dont-list .list-header { background: linear-gradient(135deg, var(--coral), #c0392b); }
--  .list-body { background: white; box-shadow: var(--card-shadow); }
--  .list-body li {
--    padding: 0.75rem 1.5rem; border-bottom: 1px solid #f5f5f5;
--    font-size: 0.9rem; display: flex; align-items: center; gap: 0.7rem;
--  }
--  .list-body li:last-child { border-bottom: none; }
--  .do-list .list-body li::before { content: '✓'; color: var(--mint); font-weight: 800; font-size: 1rem; }
--  .dont-list .list-body li::before { content: '✗'; color: var(--coral); font-weight: 800; font-size: 1rem; }
--
--  /* ── SUPPLEMENTS ── */
--  .supp-card {
--    background: white; border-radius: 16px; padding: 1.4rem;
--    box-shadow: var(--card-shadow); text-align: center;
--    border-bottom: 4px solid;
--  }
--  .supp-card .supp-icon { font-size: 2.2rem; margin-bottom: 0.5rem; }
--  .supp-card h4 { font-size: 0.95rem; font-weight: 700; color: var(--forest); }
--  .supp-card .dose { font-size: 0.82rem; color: white; padding: 0.2rem 0.7rem; border-radius: 50px; margin-top: 0.4rem; display: inline-block; }
--  .supp-card p { font-size: 0.82rem; color: var(--muted); margin-top: 0.4rem; }
--
--  /* ── DRINKS ── */
--  .drink-card {
--    background: white; border-radius: 16px; padding: 1.4rem;
--    box-shadow: var(--card-shadow); text-align: center;
--    transition: transform 0.3s;
--  }
--  .drink-card:hover { transform: translateY(-4px); }
--  .drink-card .drink-icon { font-size: 3rem; margin-bottom: 0.5rem; }
--  .drink-card h4 { font-size: 0.95rem; font-weight: 700; color: var(--forest); }
--  .drink-card .timing { color: var(--amber); font-size: 0.8rem; font-weight: 600; margin-top: 0.2rem; }
--  .drink-card p { font-size: 0.82rem; color: var(--muted); margin-top: 0.3rem; }
--
--  /* ── DAILY ROUTINE ── */
--  .routine-block {
--    background: white; border-radius: 18px; overflow: hidden; box-shadow: var(--card-shadow);
--    margin-bottom: 1rem;
--  }
--  .routine-time {
--    padding: 1rem 1.5rem; font-family: 'Baloo 2'; font-weight: 700; font-size: 1rem;
--    color: white; display: flex; align-items: center; gap: 0.8rem;
--  }
--  .routine-content {
--    padding: 1rem 1.5rem; display: flex; gap: 0.6rem; flex-wrap: wrap;
--  }
--  .routine-tag {
--    background: var(--warm); color: var(--forest);
--    font-size: 0.85rem; padding: 0.35rem 0.9rem; border-radius: 50px;
--    border: 1px solid rgba(0,0,0,0.08);
--  }
--
--  /* ── HIGHLIGHT BOX ── */
--  .highlight-box {
--    background: linear-gradient(135deg, var(--forest), var(--emerald));
--    border-radius: 20px; padding: 2.5rem;
--    text-align: center; color: white;
--    position: relative; overflow: hidden;
--  }
--  .highlight-box::before {
--    content: ''; position: absolute; inset: 0;
--    background: radial-gradient(ellipse at top right, rgba(168,224,99,0.2) 0%, transparent 60%);
--  }
--  .highlight-box h3 { font-family: 'Baloo 2'; font-size: 1.6rem; margin-bottom: 0.5rem; }
--  .highlight-box p { opacity: 0.85; font-size: 1rem; }
--  .highlight-box .formula {
--    margin-top: 1.5rem;
--    display: flex; flex-wrap: wrap; gap: 0.8rem; justify-content: center;
--  }
--  .formula-item {
--    background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25);
--    padding: 0.6rem 1.2rem; border-radius: 50px; font-size: 0.9rem;
--    backdrop-filter: blur(5px);
--  }
--  .formula-plus { color: var(--lime); font-size: 1.3rem; font-weight: 700; display: flex; align-items: center; }
--
--  /* ── FAQ ── */
--  .faq-item {
--    background: white; border-radius: 14px;
--    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
--    margin-bottom: 0.8rem; overflow: hidden;
--  }
--  .faq-q {
--    padding: 1.1rem 1.5rem; font-weight: 600; font-size: 0.95rem;
--    cursor: pointer; display: flex; justify-content: space-between; align-items: center;
--    color: var(--forest); transition: background 0.2s;
--  }
--  .faq-q:hover { background: var(--warm); }
--  .faq-q .arrow { transition: transform 0.3s; }
--  .faq-q.open .arrow { transform: rotate(180deg); }
--  .faq-a {
--    display: none; padding: 0 1.5rem 1.1rem;
--    font-size: 0.9rem; color: var(--muted); line-height: 1.7;
--    border-top: 1px solid #f0f0f0;
--    padding-top: 0.9rem;
--  }
--  .faq-a.show { display: block; }
--
--  /* ── FOOTER ── */
--  footer {
--    background: var(--forest);
--    color: rgba(255,255,255,0.7);
--    text-align: center; padding: 2.5rem 1.5rem;
--    font-size: 0.88rem;
--  }
--  footer strong { color: var(--lime); }
--  footer .disclaimer {
--    max-width: 600px; margin: 0.8rem auto 0;
--    font-size: 0.8rem; opacity: 0.6; line-height: 1.6;
--  }
--
--  /* ── PROGRESS BAR ── */
--  .progress-bar {
--    position: fixed; top: 0; left: 0; height: 3px;
--    background: linear-gradient(to right, var(--mint), var(--lime), var(--gold));
--    z-index: 200; transition: width 0.1s;
--    width: 0%;
--  }
--
--  /* ── BACK TO TOP ── */
--  .back-top {
--    position: fixed; bottom: 2rem; right: 2rem;
--    width: 46px; height: 46px; border-radius: 50%;
--    background: linear-gradient(135deg, var(--emerald), var(--mint));
--    color: white; border: none; cursor: pointer;
--    font-size: 1.2rem; box-shadow: 0 4px 16px rgba(26,107,74,0.4);
--    opacity: 0; transition: opacity 0.3s; z-index: 150;
--    display: flex; align-items: center; justify-content: center;
--  }
--  .back-top.visible { opacity: 1; }
--
--  /* ── ANIMATIONS ── */
--  @keyframes fadeDown {
--    from { opacity: 0; transform: translateY(-20px); }
--    to { opacity: 1; transform: translateY(0); }
--  }
--  .reveal {
--    opacity: 0; transform: translateY(30px);
--    transition: opacity 0.6s ease, transform 0.6s ease;
--  }
--  .reveal.visible { opacity: 1; transform: translateY(0); }
--
--  /* ── RESPONSIVE ── */
--  @media (max-width: 768px) {
--    .myth-fact, .do-dont-grid { grid-template-columns: 1fr; }
--    .nav-links { display: none; }
--    .hero-stats { gap: 1rem; }
--  }
--</style>
--</head>
--<body>
--
--<div class="progress-bar" id="progress"></div>
--
--<!-- HERO -->
--<section class="hero">
--  <div class="hero-circles">
--    <span></span><span></span><span></span>
--  </div>
--  <div class="hero-badge">🌿 Sampurna Swasthya Guide</div>
--  <h1>Sex & Masturbation ke<br><span>Baad Body Care</span></h1>
--  <p>Apni body ko samjho, sahi khaana khao, exercise karo aur face glow karo — sabkuch ek jagah</p>
--  <div class="hero-stats">
--    <div class="stat-chip">
--      <strong>90</strong>
--      <span>Din mein Sperm banta hai</span>
--    </div>
--    <div class="stat-chip">
--      <strong>20Cr+</strong>
--      <span>Sperm roz bante hain</span>
--    </div>
--    <div class="stat-chip">
--      <strong>8+</strong>
--      <span>Sections ki Poori Guide</span>
--    </div>
--  </div>
--  <div class="scroll-hint">Scroll karein</div>
--</section>
--
--<!-- NAV -->
--<nav>
--  <div class="nav-inner">
--    <div class="nav-logo">🌿 Swasthya Guide</div>
--    <div class="nav-links">
--      <a href="#body-loss">Body Loss</a>
--      <a href="#sperm">Sperm</a>
--      <a href="#diet">Diet Plan</a>
--      <a href="#foods">Foods</a>
--      <a href="#exercise">Exercise</a>
--      <a href="#face">Face Care</a>
--      <a href="#myths">Myths</a>
--      <a href="#faq">FAQ</a>
--    </div>
--  </div>
--</nav>
--
--<!-- SECTION 1: BODY LOSS -->
--<section class="section" id="body-loss">
--  <div class="container">
--    <div class="section-title reveal">
--      <div class="tag">Section 01</div>
--      <h2>Body Mein Kya Kami Hoti Hai?</h2>
--      <p>Sex / Masturbation ke baad in poshan tattvon ki kami hoti hai</p>
--    </div>
--    <div class="nutrient-grid reveal">
--      <div class="nutrient-card">
--        <div class="icon">⚡</div>
--        <h4>Zinc (जिंक)</h4>
--        <p>Sabse zyaada kharach hota hai — immunity aur sperm health ke liye zaroori</p>
--        <span class="amount">3–5mg per ejaculation</span>
--      </div>
--      <div class="nutrient-card">
--        <div class="icon">💪</div>
--        <h4>Protein (प्रोटीन)</h4>
--        <p>Muscles, energy aur body repair ke liye</p>
--        <span class="amount">~5g per ejaculation</span>
--      </div>
--      <div class="nutrient-card">
--        <div class="icon">🍊</div>
--        <h4>Vitamin C</h4>
--        <p>Antioxidant — sperm ko damage se bachata hai</p>
--        <span class="amount">Thodi matra</span>
--      </div>
--      <div class="nutrient-card">
--        <div class="icon">🦴</div>
--        <h4>Calcium & Magnesium</h4>
--        <p>Muscles aur nerves ke liye zaruri</p>
--        <span class="amount">Kam matra</span>
--      </div>
--      <div class="nutrient-card">
--        <div class="icon">🔬</div>
--        <h4>Selenium (सेलेनियम)</h4>
--        <p>Sperm motility (chalney ki kshamta) ke liye</p>
--        <span class="amount">Thodi matra</span>
--      </div>
--      <div class="nutrient-card">
--        <div class="icon">💧</div>
--        <h4>Paani (Fluids)</h4>
--        <p>Dehydration hoti hai — turant paani pina zaroori</p>
--        <span class="amount">Significant</span>
--      </div>
--      <div class="nutrient-card">
--        <div class="icon">🍬</div>
--        <h4>Fructose (Sugar)</h4>
--        <p>Sperm ko energy deta hai</p>
--        <span class="amount">Natural sugar</span>
--      </div>
--      <div class="nutrient-card">
--        <div class="icon">🧬</div>
--        <h4>Folic Acid</h4>
--        <p>Sperm DNA health ke liye important</p>
--        <span class="amount">Thodi matra</span>
--      </div>
--    </div>
--
--    <div style="margin-top: 2rem;" class="reveal">
--      <div class="highlight-box">
--        <h3>💡 Important Baat</h3>
--        <p>Ek badhiya khaane se — jaise 2 ande + 1 gilaas dudh — in sabki kami <strong>turant poori ho jaati hai</strong>. Body bahut strong hai!</p>
--      </div>
--    </div>
--  </div>
--</section>
--
--<!-- SECTION 2: SPERM -->
--<section class="section section-alt" id="sperm">
--  <div class="container">
--    <div class="section-title reveal">
--      <div class="tag">Section 02</div>
--      <h2>Sperm Kaise Banta Hai?</h2>
--      <p>Poori scientific jaankari — step by step</p>
--    </div>
--    <div class="grid-2 reveal">
--      <div class="card">
--        <h3 style="font-family:'Baloo 2';color:var(--forest);margin-bottom:1.5rem;font-size:1.2rem;">⏱️ Sperm Banne ki Timeline</h3>
--        <div class="timeline">
--          <div class="tl-item">
--            <div class="tl-dot"></div>
--            <h4>Spermatogenesis shuru hoti hai</h4>
--            <p>Testicles mein stem cells se sperm banna shuru hota hai</p>
--            <span class="days">Din 1–64</span>
--          </div>
--          <div class="tl-item">
--            <div class="tl-dot" style="background:var(--lime)"></div>
--            <h4>Sperm mature hota hai</h4>
--            <p>Epididymis mein sperm mature hota hai aur swimming seekhta hai</p>
--            <span class="days">Din 65–80 (2–3 hafta)</span>
--          </div>
--          <div class="tl-item">
--            <div class="tl-dot" style="background:var(--gold)"></div>
--            <h4>Sperm ready hota hai</h4>
--            <p>Sperm poori tarah tayaar — strong aur active</p>
--            <span class="days">~Din 90</span>
--          </div>
--          <div class="tl-item">
--            <div class="tl-dot" style="background:var(--amber)"></div>
--            <h4>Naya cycle shuru</h4>
--            <p>Body continuously nayi cells se naye sperm banati rehti hai</p>
--            <span class="days">Lagatar jaari</span>
--          </div>
--        </div>
--      </div>
--
--      <div>
--        <div class="card" style="margin-bottom:1.2rem;">
--          <h3 style="font-family:'Baloo 2';color:var(--forest);margin-bottom:1rem;font-size:1.1rem;">📊 Kuch Interesting Numbers</h3>
--          <div style="display:flex;flex-direction:column;gap:0.8rem;">
--            <div style="display:flex;justify-content:space-between;align-items:center;padding:0.7rem 1rem;background:var(--warm);border-radius:10px;">
--              <span style="font-size:0.9rem;">Roz kitna banta hai?</span>
--              <strong style="color:var(--emerald);">10–20 Crore</strong>
--            </div>
--            <div style="display:flex;justify-content:space-between;align-items:center;padding:0.7rem 1rem;background:var(--warm);border-radius:10px;">
--              <span style="font-size:0.9rem;">Ek baar mein kitna niklta hai?</span>
--              <strong style="color:var(--emerald);">15–50 Crore</strong>
--            </div>
--            <div style="display:flex;justify-content:space-between;align-items:center;padding:0.7rem 1rem;background:var(--warm);border-radius:10px;">
--              <span style="font-size:0.9rem;">Poora time lagne mein?</span>
--              <strong style="color:var(--emerald);">~90 Din</strong>
--            </div>
--            <div style="display:flex;justify-content:space-between;align-items:center;padding:0.7rem 1rem;background:var(--warm);border-radius:10px;">
--              <span style="font-size:0.9rem;">Sperm ki speed?</span>
--              <strong style="color:var(--emerald);">25–30 cm/hour</strong>
--            </div>
--            <div style="display:flex;justify-content:space-between;align-items:center;padding:0.7rem 1rem;background:var(--warm);border-radius:10px;">
--              <span style="font-size:0.9rem;">Normal temperature?</span>
--              <strong style="color:var(--emerald);">34–35°C</strong>
--            </div>
--          </div>
--        </div>
--        <div class="card" style="background:linear-gradient(135deg,#e8f5e9,#f1f8e9);">
--          <h4 style="color:var(--emerald);font-family:'Baloo 2';margin-bottom:0.5rem;">🌡️ Sperm Health Tips</h4>
--          <ul style="list-style:none;font-size:0.88rem;color:var(--muted);display:flex;flex-direction:column;gap:0.4rem;">
--            <li>✅ Tight kapde na paheno — testicles ka temp badhta hai</li>
--            <li>✅ Zyaada garam paani mein na baithein</li>
--            <li>✅ Laptop seedha god mein na rakhein</li>
--            <li>✅ Smoking bilkul band karein</li>
--            <li>✅ Alcohol kam karein</li>
--            <li>✅ Stress manage karein</li>
--          </ul>
--        </div>
--      </div>
--    </div>
--  </div>
--</section>
--
--<!-- SECTION 3: DIET PLAN -->
--<section class="section" id="diet">
--  <div class="container">
--    <div class="section-title reveal">
--      <div class="tag">Section 03</div>
--      <h2>Poora Din Ka Diet Plan</h2>
--      <p>Subah se raat tak — kya khayein, kab khayein</p>
--    </div>
--    <div class="grid-2 reveal">
--
--      <div class="meal-card">
--        <div class="meal-header" style="background:linear-gradient(135deg,#f39c12,#e67e22)">
--          <span class="meal-icon">🌅</span>
--          <div>
--            <h3>Uthte Hi (Subah)</h3>
--            <span>6:00 – 7:00 AM</span>
--          </div>
--        </div>
--        <div class="meal-body">
--          <ul class="meal-items">
--            <li>2–3 gilaas gunguna paani (khali pet)</li>
--            <li>Nimbu + Shahad (1 tsp shahad + aadha nimbu)</li>
--            <li>Aloe Vera Juice (optional - skin ke liye)</li>
--          </ul>
--        </div>
--      </div>
--
--      <div class="meal-card">
--        <div class="meal-header" style="background:linear-gradient(135deg,#27ae60,#1e8449)">
--          <span class="meal-icon">🍳</span>
--          <div>
--            <h3>Nashta (Breakfast)</h3>
--            <span>8:00 – 9:00 AM</span>
--          </div>
--        </div>
--        <div class="meal-body">
--          <ul class="meal-items">
--            <li>5–7 bhige badam + 2–3 akhrot</li>
--            <li>2 uble ande ya paneer bhurji</li>
--            <li>1 gilaas dudh + Ashwagandha (aadha chammach)</li>
--            <li>Oats ya Daliya (fiber ke liye)</li>
--            <li>Kela (potassium + energy)</li>
--          </ul>
--        </div>
--      </div>
--
--      <div class="meal-card">
--        <div class="meal-header" style="background:linear-gradient(135deg,#2980b9,#1a5276)">
--          <span class="meal-icon">🍱</span>
--          <div>
--            <h3>Dopahar (Lunch)</h3>
--            <span>1:00 – 2:00 PM</span>
--          </div>
--        </div>
--        <div class="meal-body">
--          <ul class="meal-items">
--            <li>2 roti + dal (moong/masoor/chana)</li>
--            <li>Chawal (agar chahein)</li>
--            <li>Hare sabziyaan — palak, methi, broccoli</li>
--            <li>Dahi (curd) — probiotics ke liye</li>
--            <li>Salad + paani 2 gilaas</li>
--          </ul>
--        </div>
--      </div>
--
--      <div class="meal-card">
--        <div class="meal-header" style="background:linear-gradient(135deg,#8e44ad,#6c3483)">
--          <span class="meal-icon">☕</span>
--          <div>
--            <h3>Shaam (Evening)</h3>
--            <span>5:00 – 6:00 PM</span>
--          </div>
--        </div>
--        <div class="meal-body">
--          <ul class="meal-items">
--            <li>Mixed nuts — kaju, badam, pista, akhrot</li>
--            <li>Naariyal paani (coconut water)</li>
--            <li>Kela ya 2–3 khajoor (dates)</li>
--            <li>Green tea ya black coffee (optional)</li>
--          </ul>
--        </div>
--      </div>
--
--      <div class="meal-card">
--        <div class="meal-header" style="background:linear-gradient(135deg,#1abc9c,#148f77)">
--          <span class="meal-icon">🌙</span>
--          <div>
--            <h3>Raat (Dinner)</h3>
--            <span>8:00 – 9:00 PM</span>
--          </div>
--        </div>
--        <div class="meal-body">
--          <ul class="meal-items">
--            <li>Halka khaana — dal + 1–2 roti</li>
--            <li>Grilled chicken / fish (non-veg log)</li>
--            <li>Hara salad</li>
--            <li>Sone se 30 min pehle: Haldi waala dudh (Golden Milk)</li>
--          </ul>
--        </div>
--      </div>
--
--      <div class="meal-card">
--        <div class="meal-header" style="background:linear-gradient(135deg,#e74c3c,#c0392b)">
--          <span class="meal-icon">🚫</span>
--          <div>
--            <h3>Bilkul Na Khayein</h3>
--            <span>Harmful Foods</span>
--          </div>
--        </div>
--        <div class="meal-body">
--          <ul class="meal-items">
--            <li>Cold drinks / Soda / Packed juices</li>
--            <li>Zyaada oily / fried food</li>
--            <li>Maida products (white bread, biscuits)</li>
--            <li>Excess sugar / sweets</li>
--            <li>Alcohol aur smoking — sperm killer hai</li>
--          </ul>
--        </div>
--      </div>
--
--    </div>
--  </div>
--</section>
--
--<!-- SECTION 4: BEST FOODS -->
--<section class="section section-alt" id="foods">
--  <div class="container">
--    <div class="section-title reveal">
--      <div class="tag">Section 04</div>
--      <h2>Best Recovery Foods</h2>
--      <p>Ye khaane sperm quality, energy aur face glow ke liye best hain</p>
--    </div>
--    <div class="grid-4 reveal">
--      <div class="food-card">
--        <div class="food-emoji">🥚</div>
--        <h4>Ande (Eggs)</h4>
--        <p>Complete protein + Selenium + Vitamin D</p>
--        <span class="benefit">Sperm Quality ↑</span>
--      </div>
--      <div class="food-card">
--        <div class="food-emoji">🥜</div>
--        <h4>Akhrot</h4>
--        <p>Omega-3 fatty acids — sperm motility behtar kare</p>
--        <span class="benefit">Motility ↑</span>
--      </div>
--      <div class="food-card">
--        <div class="food-emoji">🥬</div>
--        <h4>Palak</h4>
--        <p>Folic acid — sperm count badhaye, DNA repair</p>
--        <span class="benefit">Count ↑</span>
--      </div>
--      <div class="food-card">
--        <div class="food-emoji">🍫</div>
--        <h4>Dark Chocolate</h4>
--        <p>L-arginine — sperm count aur volume badhaye</p>
--        <span class="benefit">Volume ↑</span>
--      </div>
--      <div class="food-card">
--        <div class="food-emoji">🧄</div>
--        <h4>Lahsun</h4>
--        <p>Blood flow behtar kare, testosterone support</p>
--        <span class="benefit">Blood Flow ↑</span>
--      </div>
--      <div class="food-card">
--        <div class="food-emoji">🍌</div>
--        <h4>Kela</h4>
--        <p>Potassium + Vitamin B6 — energy recovery</p>
--        <span class="benefit">Energy ↑</span>
--      </div>
--      <div class="food-card">
--        <div class="food-emoji">🍅</div>
--        <h4>Tamatar</h4>
--        <p>Lycopene — sperm concentration badhaye</p>
--        <span class="benefit">Concentration ↑</span>
--      </div>
--      <div class="food-card">
--        <div class="food-emoji">🫐</div>
--        <h4>Blueberries</h4>
--        <p>Antioxidants — sperm DNA protect kare</p>
--        <span class="benefit">DNA Protection</span>
--      </div>
--      <div class="food-card">
--        <div class="food-emoji">🎃</div>
--        <h4>Kaddoo ke Beej</h4>
--        <p>Zinc se bhari — daily zinc ki kami poori kare</p>
--        <span class="benefit">Zinc Rich</span>
--      </div>
--      <div class="food-card">
--        <div class="food-emoji">🥦</div>
--        <h4>Broccoli</h4>
--        <p>Vitamin C + Folic acid — double benefit</p>
--        <span class="benefit">Vitamin C ↑</span>
--      </div>
--      <div class="food-card">
--        <div class="food-emoji">🐟</div>
--        <h4>Machli (Fish)</h4>
--        <p>Omega-3 + Protein — best food for men</p>
--        <span class="benefit">Best Overall</span>
--      </div>
--      <div class="food-card">
--        <div class="food-emoji">🍯</div>
--        <h4>Shahad (Honey)</h4>
--        <p>Natural energy + antibacterial + skin glow</p>
--        <span class="benefit">Glow + Energy</span>
--      </div>
--    </div>
--
--    <!-- Ayurvedic Section -->
--    <div style="margin-top:3rem;" class="reveal">
--      <div class="section-title">
--        <div class="tag" style="background:linear-gradient(135deg,var(--amber),var(--gold))">Ayurveda</div>
--        <h2>Ayurvedic Herbs — Traditional Power</h2>
--      </div>
--      <div class="grid-3">
--        <div class="card" style="border-top:4px solid var(--emerald)">
--          <div style="font-size:2.5rem;margin-bottom:0.5rem;">🌿</div>
--          <h4 style="font-family:'Baloo 2';color:var(--forest);font-size:1.1rem;">Ashwagandha</h4>
--          <p style="font-size:0.88rem;color:var(--muted);margin-top:0.4rem;">Testosterone badhata hai, stress kam karta hai, sperm count 167% tak improve karta hai (studies ke anusaar). Raat ko dudh mein lein.</p>
--        </div>
--        <div class="card" style="border-top:4px solid var(--amber)">
--          <div style="font-size:2.5rem;margin-bottom:0.5rem;">🍂</div>
--          <h4 style="font-family:'Baloo 2';color:var(--forest);font-size:1.1rem;">Shatavari</h4>
--          <p style="font-size:0.88rem;color:var(--muted);margin-top:0.4rem;">Sexual vitality badhata hai, hormones balance karta hai, stamina improve karta hai. Subah dudh ke saath lein.</p>
--        </div>
--        <div class="card" style="border-top:4px solid var(--coral)">
--          <div style="font-size:2.5rem;margin-bottom:0.5rem;">⚫</div>
--          <h4 style="font-family:'Baloo 2';color:var(--forest);font-size:1.1rem;">Shilajit</h4>
--          <p style="font-size:0.88rem;color:var(--muted);margin-top:0.4rem;">60+ minerals, testosterone boost, energy aur stamina ke liye best. Pure shilajit lein, doctor se consult karein.</p>
--        </div>
--        <div class="card" style="border-top:4px solid var(--sky)">
--          <div style="font-size:2.5rem;margin-bottom:0.5rem;">🌸</div>
--          <h4 style="font-family:'Baloo 2';color:var(--forest);font-size:1.1rem;">Safed Musli</h4>
--          <p style="font-size:0.88rem;color:var(--muted);margin-top:0.4rem;">Sperm count aur motility ke liye, weakness door kare, body ko strengthen kare.</p>
--        </div>
--        <div class="card" style="border-top:4px solid var(--lavender)">
--          <div style="font-size:2.5rem;margin-bottom:0.5rem;">🌱</div>
--          <h4 style="font-family:'Baloo 2';color:var(--forest);font-size:1.1rem;">Kapikacchu (Kaunch Beej)</h4>
--          <p style="font-size:0.88rem;color:var(--muted);margin-top:0.4rem;">Dopamine badhata hai, testosterone improve karta hai, sexual performance ke liye</p>
--        </div>
--        <div class="card" style="border-top:4px solid var(--gold)">
--          <div style="font-size:2.5rem;margin-bottom:0.5rem;">💛</div>
--          <h4 style="font-family:'Baloo 2';color:var(--forest);font-size:1.1rem;">Haldi (Turmeric)</h4>
--          <p style="font-size:0.88rem;color:var(--muted);margin-top:0.4rem;">Anti-inflammatory, skin glow, immunity boost. Raat ko dudh mein lein — Golden Milk</p>
--        </div>
--      </div>
--    </div>
--  </div>
--</section>
--
--<!-- SECTION 5: EXERCISE -->
--<section class="section" id="exercise">
--  <div class="container">
--    <div class="section-title reveal">
--      <div class="tag">Section 05</div>
--      <h2>Exercise Plan</h2>
--      <p>Sex ke baad aur roz ki exercise — complete guide</p>
--    </div>
--    <div class="grid-2 reveal">
--      <div>
--        <h3 style="font-family:'Baloo 2';color:var(--forest);margin-bottom:1.2rem;font-size:1.15rem;">🔥 Core Exercises for Sexual Health</h3>
--        <div style="display:flex;flex-direction:column;gap:1rem;">
--          <div class="exercise-card">
--            <div class="ex-icon">🧘</div>
--            <div>
--              <h4>Kegel Exercise</h4>
--              <div class="sets">10 reps × 3 sets | Roz subah</div>
--              <p>Pelvic floor muscles mazboot kare, sexual performance behtar kare, bladder control</p>
--            </div>
--          </div>
--          <div class="exercise-card" style="border-left-color:var(--amber)">
--            <div class="ex-icon">🏋️</div>
--            <div>
--              <h4>Squats</h4>
--              <div class="sets">3 sets × 15 reps | Roz</div>
--              <p>Testosterone 30% tak boost hota hai, lower body strength, pelvic strength</p>
--            </div>
--          </div>
--          <div class="exercise-card" style="border-left-color:var(--sky)">
--            <div class="ex-icon">💪</div>
--            <div>
--              <h4>Push-ups</h4>
--              <div class="sets">3 sets × 15 reps | Roz</div>
--              <p>Upper body strength, blood circulation behtar, testosterone boost</p>
--            </div>
--          </div>
--          <div class="exercise-card" style="border-left-color:var(--lavender)">
--            <div class="ex-icon">🛡️</div>
--            <div>
--              <h4>Plank</h4>
--              <div class="sets">30–60 seconds × 3 sets | Roz</div>
--              <p>Core strength, back pain se rahat, posture improve</p>
--            </div>
--          </div>
--          <div class="exercise-card" style="border-left-color:var(--coral)">
--            <div class="ex-icon">🦵</div>
--            <div>
--              <h4>Hip Thrusts</h4>
--              <div class="sets">3 sets × 12 reps | Hafte mein 3 baar</div>
--              <p>Pelvic muscles strong, sexual performance directly improve</p>
--            </div>
--          </div>
--        </div>
--      </div>
--
--      <div>
--        <h3 style="font-family:'Baloo 2';color:var(--forest);margin-bottom:1.2rem;font-size:1.15rem;">🌬️ Daily Wellness Activities</h3>
--        <div style="display:flex;flex-direction:column;gap:1rem;">
--          <div class="exercise-card" style="border-left-color:var(--mint)">
--            <div class="ex-icon">🚶</div>
--            <div>
--              <h4>Walking (Tez Chal)</h4>
--              <div class="sets">30 min roz | Subah ya shaam</div>
--              <p>Blood circulation, fresh oxygen, mental health, testosterone maintain</p>
--            </div>
--          </div>
--          <div class="exercise-card" style="border-left-color:var(--gold)">
--            <div class="ex-icon">🧘</div>
--            <div>
--              <h4>Pranayama / Deep Breathing</h4>
--              <div class="sets">10–15 min roz | Subah khali pet</div>
--              <p>Anulom vilom, kapalbhati — oxygen badhaye, stress kam kare</p>
--            </div>
--          </div>
--          <div class="exercise-card" style="border-left-color:var(--emerald)">
--            <div class="ex-icon">🤸</div>
--            <div>
--              <h4>Stretching</h4>
--              <div class="sets">10 min roz | Sone se pehle</div>
--              <p>Muscles relax, flexibility, achi neend ke liye</p>
--            </div>
--          </div>
--          <div class="exercise-card" style="border-left-color:var(--coral)">
--            <div class="ex-icon">🏃</div>
--            <div>
--              <h4>Jogging / Running</h4>
--              <div class="sets">20–30 min | Hafte mein 3–4 baar</div>
--              <p>Cardiovascular health, energy, mood improve, weight control</p>
--            </div>
--          </div>
--          <div class="exercise-card" style="border-left-color:var(--lavender)">
--            <div class="ex-icon">🧗</div>
--            <div>
--              <h4>Deadlift</h4>
--              <div class="sets">3 sets × 8 reps | Hafte mein 2 baar</div>
--              <p>Testosterone sabse zyaada badhane wali exercise</p>
--            </div>
--          </div>
--        </div>
--      </div>
--    </div>
--
--    <!-- Kegel Detail -->
--    <div style="margin-top:2.5rem;" class="reveal">
--      <div class="card" style="background:linear-gradient(135deg,#e8f5e9,#f1f8e9);border:2px solid var(--mint)">
--        <h3 style="font-family:'Baloo 2';color:var(--forest);font-size:1.2rem;margin-bottom:1rem;">🎯 Kegel Exercise — Sahi Tarika</h3>
--        <div class="grid-3">
--          <div style="background:white;border-radius:12px;padding:1.2rem;text-align:center;">
--            <div style="font-size:2rem;margin-bottom:0.4rem;">1️⃣</div>
--            <h4 style="font-size:0.9rem;color:var(--forest);">Muscles Dhundho</h4>
--            <p style="font-size:0.82rem;color:var(--muted);">Peshaab rokne ki koshish karo — jo muscles use hon, wahi kegel muscles hain</p>
--          </div>
--          <div style="background:white;border-radius:12px;padding:1.2rem;text-align:center;">
--            <div style="font-size:2rem;margin-bottom:0.4rem;">2️⃣</div>
--            <h4 style="font-size:0.9rem;color:var(--forest);">Contract Karo</h4>
--            <p style="font-size:0.82rem;color:var(--muted);">Un muscles ko 5 second tak rok ke rakho, phir 5 second relax karo</p>
--          </div>
--          <div style="background:white;border-radius:12px;padding:1.2rem;text-align:center;">
--            <div style="font-size:2rem;margin-bottom:0.4rem;">3️⃣</div>
--            <h4 style="font-size:0.9rem;color:var(--forest);">Repeat Karo</h4>
--            <p style="font-size:0.82rem;color:var(--muted);">10 baar karo, din mein 3 baar. 4–6 hafte mein farak dikhega</p>
--          </div>
--        </div>
--      </div>
--    </div>
--  </div>
--</section>
--
--<!-- SECTION 6: FACE CARE -->
--<section class="section section-alt" id="face">
--  <div class="container">
--    <div class="section-title reveal">
--      <div class="tag">Section 06</div>
--      <h2>Face Recovery & Glow</h2>
--      <p>Glowing skin ke liye complete routine — subah se raat tak</p>
--    </div>
--
--    <div class="grid-2 reveal" style="margin-bottom:2.5rem;">
--      <!-- Morning Routine -->
--      <div class="card">
--        <h3 style="font-family:'Baloo 2';color:var(--amber);font-size:1.15rem;margin-bottom:1.2rem;">🌅 Subah Ki Routine</h3>
--        <div style="display:flex;flex-direction:column;gap:0.8rem;">
--          <div class="step-card">
--            <div class="step-num">1</div>
--            <h4>Paani Piyein (Uthte Hi)</h4>
--            <p>2 gilaas gunguna paani + nimbu + shahad. Skin andar se hydrate hoti hai</p>
--          </div>
--          <div class="step-card">
--            <div class="step-num" style="background:linear-gradient(135deg,var(--amber),var(--gold))">2</div>
--            <h4>Face Wash</h4>
--            <p>Thande paani se mooh dhoyein. Gentle face wash use karein — baar baar na dhoyein</p>
--          </div>
--          <div class="step-card">
--            <div class="step-num" style="background:linear-gradient(135deg,var(--emerald),var(--mint))">3</div>
--            <h4>Aloe Vera Gel</h4>
--            <p>Fresh aloe vera ya packaged gel — chehre par 20 min lagayein, phir dhoyein. Roz karein</p>
--          </div>
--          <div class="step-card">
--            <div class="step-num" style="background:linear-gradient(135deg,var(--sky),#1a5276)">4</div>
--            <h4>Moisturizer + Sunscreen</h4>
--            <p>Light moisturizer lagayein. Bahar nikalne se pehle SPF 30+ sunscreen zaroor lagayein</p>
--          </div>
--        </div>
--      </div>
--
--      <!-- Night Routine -->
--      <div class="card">
--        <h3 style="font-family:'Baloo 2';color:var(--lavender);font-size:1.15rem;margin-bottom:1.2rem;">🌙 Raat Ki Routine</h3>
--        <div style="display:flex;flex-direction:column;gap:0.8rem;">
--          <div class="step-card" style="border-left:4px solid var(--lavender)">
--            <div class="step-num" style="background:linear-gradient(135deg,var(--lavender),#6c3483)">1</div>
--            <h4>Face Achhe Se Dhoyein</h4>
--            <p>Din bhar ki dhool aur oil saaf karein. Gentle cleanser use karein</p>
--          </div>
--          <div class="step-card" style="border-left:4px solid var(--lavender)">
--            <div class="step-num" style="background:linear-gradient(135deg,var(--lavender),#6c3483)">2</div>
--            <h4>Aloe Vera ya Coconut Oil</h4>
--            <p>Halka sa lagayein — raat bhar kaam karta hai, subah fresh skin milegi</p>
--          </div>
--          <div class="step-card" style="border-left:4px solid var(--lavender)">
--            <div class="step-num" style="background:linear-gradient(135deg,var(--lavender),#6c3483)">3</div>
--            <h4>Golden Milk Piyein</h4>
--            <p>Haldi waala dudh — skin se andar tak repair, anti-inflammatory</p>
--          </div>
--          <div class="step-card" style="border-left:4px solid var(--lavender)">
--            <div class="step-num" style="background:linear-gradient(135deg,var(--lavender),#6c3483)">4</div>
--            <h4>10–11 Baje Tak Soyein</h4>
--            <p>Neend mein skin repair hoti hai — yahi sabse bada secret hai glowing skin ka</p>
--          </div>
--        </div>
--      </div>
--    </div>
--
--    <!-- Face Masks -->
--    <div class="reveal">
--      <div class="section-title">
--        <div class="tag" style="background:linear-gradient(135deg,#8e44ad,var(--lavender))">Gharelu Nuskhe</div>
--        <h2>Face Masks — 100% Natural</h2>
--      </div>
--      <div class="grid-3">
--        <div class="card" style="text-align:center;border-top:4px solid var(--mint)">
--          <div style="font-size:3rem;margin-bottom:0.5rem;">🌵</div>
--          <h4 style="font-family:'Baloo 2';color:var(--forest);">Aloe Vera Mask</h4>
--          <p style="font-size:0.85rem;color:var(--muted);margin-top:0.4rem;">Fresh aloe vera gel chehra par lagayein, 20 min baad dhoyein. Roz karein — best face mask</p>
--          <div style="margin-top:0.7rem;font-size:0.78rem;background:var(--warm);border-radius:8px;padding:0.5rem;color:var(--emerald);font-weight:600;">⏰ Roz | Best for Glow</div>
--        </div>
--        <div class="card" style="text-align:center;border-top:4px solid var(--amber)">
--          <div style="font-size:3rem;margin-bottom:0.5rem;">🫙</div>
--          <h4 style="font-family:'Baloo 2';color:var(--forest);">Besan + Dahi + Haldi</h4>
--          <p style="font-size:0.85rem;color:var(--muted);margin-top:0.4rem;">2 chammach besan + 1 chammach dahi + chutki haldi. Milayen, 15–20 min lagayein, dhoyein</p>
--          <div style="margin-top:0.7rem;font-size:0.78rem;background:var(--warm);border-radius:8px;padding:0.5rem;color:var(--amber);font-weight:600;">⏰ Hafte mein 2 baar | Brightening</div>
--        </div>
--        <div class="card" style="text-align:center;border-top:4px solid var(--gold)">
--          <div style="font-size:3rem;margin-bottom:0.5rem;">🍯</div>
--          <h4 style="font-family:'Baloo 2';color:var(--forest);">Honey + Nimbu Mask</h4>
--          <p style="font-size:0.85rem;color:var(--muted);margin-top:0.4rem;">1 chammach shahad + kuch boond nimbu. 15 min lagayein. Glow aur dark spots ke liye</p>
--          <div style="margin-top:0.7rem;font-size:0.78rem;background:var(--warm);border-radius:8px;padding:0.5rem;color:var(--gold);font-weight:600;">⏰ Hafte mein 2 baar | Dark Spots</div>
--        </div>
--        <div class="card" style="text-align:center;border-top:4px solid var(--sky)">
--          <div style="font-size:3rem;margin-bottom:0.5rem;">🧊</div>
--          <h4 style="font-family:'Baloo 2';color:var(--forest);">Ice Cube Therapy</h4>
--          <p style="font-size:0.85rem;color:var(--muted);margin-top:0.4rem;">Subah uthkar face par ice cube lagayein — pores tight, swelling kam, freshness instant</p>
--          <div style="margin-top:0.7rem;font-size:0.78rem;background:var(--warm);border-radius:8px;padding:0.5rem;color:var(--sky);font-weight:600;">⏰ Roz subah | Instant Freshness</div>
--        </div>
--        <div class="card" style="text-align:center;border-top:4px solid var(--emerald)">
--          <div style="font-size:3rem;margin-bottom:0.5rem;">🥒</div>
--          <h4 style="font-family:'Baloo 2';color:var(--forest);">Cucumber Slice</h4>
--          <p style="font-size:0.85rem;color:var(--muted);margin-top:0.4rem;">Thandi kheera ki slices aankhon aur face par rakho — puffiness aur dark circles door</p>
--          <div style="margin-top:0.7rem;font-size:0.78rem;background:var(--warm);border-radius:8px;padding:0.5rem;color:var(--emerald);font-weight:600;">⏰ Roz | Dark Circles</div>
--        </div>
--        <div class="card" style="text-align:center;border-top:4px solid var(--coral)">
--          <div style="font-size:3rem;margin-bottom:0.5rem;">🍵</div>
--          <h4 style="font-family:'Baloo 2';color:var(--forest);">Green Tea Toner</h4>
--          <p style="font-size:0.85rem;color:var(--muted);margin-top:0.4rem;">Green tea thandi karke cotton se face par lagao — antioxidants, anti-aging, glow</p>
--          <div style="margin-top:0.7rem;font-size:0.78rem;background:var(--warm);border-radius:8px;padding:0.5rem;color:var(--coral);font-weight:600;">⏰ Hafte mein 3 baar | Anti-aging</div>
--        </div>
--      </div>
--    </div>
--  </div>
--</section>
--
--<!-- SECTION 7: DRINKS -->
--<section class="section" id="drinks">
--  <div class="container">
--    <div class="section-title reveal">
--      <div class="tag">Section 07</div>
--      <h2>Skin Glow Drinks</h2>
--      <p>Andar se glow — ye peeyein roz</p>
--    </div>
--    <div class="grid-4 reveal">
--      <div class="drink-card">
--        <div class="drink-icon">🍋</div>
--        <h4>Nimbu Shahad Paani</h4>
--        <div class="timing">Subah khali pet</div>
--        <p>Vitamin C + detox + skin glow, immunity boost</p>
--      </div>
--      <div class="drink-card">
--        <div class="drink-icon">🥥</div>
--        <h4>Naariyal Paani</h4>
--        <div class="timing">Din mein kabhi bhi</div>
--        <p>Electrolytes, hydration, skin hydrate, energy</p>
--      </div>
--      <div class="drink-card">
--        <div class="drink-icon">🌿</div>
--        <h4>Aloe Vera Juice</h4>
--        <div class="timing">Subah khali pet</div>
--        <p>Skin se andar tak repair, digestion achha, glow</p>
--      </div>
--      <div class="drink-card">
--        <div class="drink-icon">🍵</div>
--        <h4>Green Tea</h4>
--        <div class="timing">Subah ya shaam</div>
--        <p>Antioxidants, fat burn, skin anti-aging</p>
--      </div>
--      <div class="drink-card">
--        <div class="drink-icon">🥛</div>
--        <h4>Haldi Waala Dudh</h4>
--        <div class="timing">Raat sone se pehle</div>
--        <p>Anti-inflammatory, recovery, skin glow, neend</p>
--      </div>
--      <div class="drink-card">
--        <div class="drink-icon">🍹</div>
--        <h4>Amla Juice</h4>
--        <div class="timing">Subah khali pet</div>
--        <p>Vitamin C highest source, collagen boost, glow</p>
--      </div>
--      <div class="drink-card">
--        <div class="drink-icon">🫚</div>
--        <h4>Kachi Haldi Paani</h4>
--        <div class="timing">Subah</div>
--        <p>Curcumin — powerful anti-inflammatory, skin tone</p>
--      </div>
--      <div class="drink-card">
--        <div class="drink-icon">💦</div>
--        <h4>Saada Paani</h4>
--        <div class="timing">8–10 gilaas roz</div>
--        <p>Sabse zaroori — skin ka 70% hydration paani se</p>
--      </div>
--    </div>
--  </div>
--</section>
--
--<!-- SECTION 8: MYTHS vs FACTS -->
--<section class="section section-alt" id="myths">
--  <div class="container">
--    <div class="section-title reveal">
--      <div class="tag">Section 08</div>
--      <h2>Myths vs Facts</h2>
--      <p>Jo suna hai usme se kya sach hai, kya jhooth?</p>
--    </div>
--    <div style="display:flex;flex-direction:column;gap:1.2rem;" class="reveal">
--
--      <div class="myth-fact">
--        <div class="myth-side">
--          <h4>❌ MYTH: Face kala pad jaata hai</h4>
--          <p>Masturbation se chehra kala nahi hota. Yeh sirf ek aam galat dharna hai.</p>
--        </div>
--        <div class="fact-side">
--          <h4>✅ FACT: Face dull hone ke asli kaaraN</h4>
--          <p>Neend ki kami, paani kam peena, junk food, sun damage, stress — yeh hain asli kaaraN. Masturbation ka face colour se koi sambandh nahi.</p>
--        </div>
--      </div>
--
--      <div class="myth-fact">
--        <div class="myth-side">
--          <h4>❌ MYTH: Roz karne se kamzori aati hai</h4>
--          <p>Bahut log mante hain ki masturbation se body weak ho jaati hai.</p>
--        </div>
--        <div class="fact-side">
--          <h4>✅ FACT: Moderate masturbation safe hai</h4>
--          <p>Hafte mein 2–4 baar bilkul normal hai. Isse stress kam hota hai, neend achhi aati hai. Kamzori ka kaaraN poor diet aur exercise ki kami hai.</p>
--        </div>
--      </div>
--
--      <div class="myth-fact">
--        <div class="myth-side">
--          <h4>❌ MYTH: Virya naaash se shakti khatam hoti hai</h4>
--          <p>Purani Indian theory mein "veerya rakshaaN" ko bahut importance di jaati thi.</p>
--        </div>
--        <div class="fact-side">
--          <h4>✅ FACT: Body khud naya banaati hai</h4>
--          <p>Ek ejaculation mein sirf 0.1% zinc daily requirement ka kharach hota hai. 1 anda khaane se kami poori. Body roz 10–20 crore naye sperm banaati hai.</p>
--        </div>
--      </div>
--
--      <div class="myth-fact">
--        <div class="myth-side">
--          <h4>❌ MYTH: Masturbation se height rukti hai</h4>
--          <p>Yeh bhi ek popular myth hai jo log mante hain.</p>
--        </div>
--        <div class="fact-side">
--          <h4>✅ FACT: Height genetics + nutrition par depend hai</h4>
--          <p>Height Growth hormone (HGH) par depend karti hai jiska masturbation se koi lena dena nahi. Proper sleep aur nutrition se height badhti hai.</p>
--        </div>
--      </div>
--
--      <div class="myth-fact">
--        <div class="myth-side">
--          <h4>❌ MYTH: Memory aur concentration kharab hoti hai</h4>
--          <p>Bahut log kehte hain ki masturbation se dimag kamzor hota hai.</p>
--        </div>
--        <div class="fact-side">
--          <h4>✅ FACT: Guilt aur anxiety se hota hai problem</h4>
--          <p>Masturbation directly brain ko damage nahi karta. Par guilt, shame aur anxiety — yeh mental health ko affect karte hain. Healthy attitude rakhein.</p>
--        </div>
--      </div>
--
--    </div>
--  </div>
--</section>
--
--<!-- DO DONT -->
--<section class="section" id="dodont">
--  <div class="container">
--    <div class="section-title reveal">
--      <div class="tag">Section 09</div>
--      <h2>Kya Karein / Kya Na Karein</h2>
--      <p>Simple rules — bada fark</p>
--    </div>
--    <div class="do-dont-grid reveal">
--      <div class="do-list">
--        <div class="list-header">✅ ZAROOR KAREIN (Do's)</div>
--        <ul class="list-body">
--          <li>Roz 8–10 gilaas paani piyein</li>
--          <li>7–8 ghante ki gehri neend lein</li>
--          <li>Roz 30 min exercise karein</li>
--          <li>Fruits khayein — papaya, santra, aamla</li>
--          <li>Subah nimbu paani + shahad lein</li>
--          <li>Hafte mein 2–3 baar balance rakhein</li>
--          <li>Aloe vera roz face par lagayein</li>
--          <li>Sunscreen roz lagayein (SPF 30+)</li>
--          <li>Stress manage karein — yoga, meditation</li>
--          <li>Ashwagandha raat ko dudh mein lein</li>
--          <li>Kegel exercise roz karein</li>
--          <li>Protein se bhara nashta karein</li>
--        </ul>
--      </div>
--      <div class="dont-list">
--        <div class="list-header">❌ BILKUL NA KAREIN (Don'ts)</div>
--        <ul class="list-body">
--          <li>Cold drinks / soda bilkul band karein</li>
--          <li>Raat ko 12 baje ke baad mat jaago</li>
--          <li>Smoking — sperm quality 22% kam karta hai</li>
--          <li>Alcohol — testosterone directly girata hai</li>
--          <li>Zyaada oily / junk food se bachein</li>
--          <li>Din mein baar baar masturbation (3–4+)</li>
--          <li>Screen time raat ko zyaada na karein</li>
--          <li>Guilt feel mat karo — natural hai</li>
--          <li>Laptop seedha god mein mat rakho</li>
--          <li>Zyaada garam paani mein mat baithein</li>
--          <li>Tight underwear avoid karein</li>
--          <li>Stress mat lo — cortisol sperm killer hai</li>
--        </ul>
--      </div>
--    </div>
--  </div>
--</section>
--
--<!-- SUPPLEMENTS -->
--<section class="section section-alt" id="supplements">
--  <div class="container">
--    <div class="section-title reveal">
--      <div class="tag">Section 10</div>
--      <h2>Supplements Guide</h2>
--      <p>Doctor se poochh kar lein — yeh safe hain</p>
--    </div>
--    <div class="grid-4 reveal">
--      <div class="supp-card" style="border-bottom-color:var(--mint)">
--        <div class="supp-icon">⚡</div>
--        <h4>Zinc</h4>
--        <span class="dose" style="background:var(--emerald)">11mg daily</span>
--        <p>Sperm health, immunity, testosterone ke liye</p>
--      </div>
--      <div class="supp-card" style="border-bottom-color:var(--gold)">
--        <div class="supp-icon">☀️</div>
--        <h4>Vitamin D3</h4>
--        <span class="dose" style="background:var(--gold)">2000 IU daily</span>
--        <p>Testosterone, bone health, immunity boost</p>
--      </div>
--      <div class="supp-card" style="border-bottom-color:var(--amber)">
--        <div class="supp-icon">🐟</div>
--        <h4>Omega-3</h4>
--        <span class="dose" style="background:var(--amber)">1000mg daily</span>
--        <p>Sperm motility, heart health, brain function</p>
--      </div>
--      <div class="supp-card" style="border-bottom-color:var(--lavender)">
--        <div class="supp-icon">🌿</div>
--        <h4>Magnesium</h4>
--        <span class="dose" style="background:var(--lavender)">400mg daily</span>
--        <p>Neend behtar, muscle recovery, testosterone</p>
--      </div>
--      <div class="supp-card" style="border-bottom-color:var(--sky)">
--        <div class="supp-icon">🔬</div>
--        <h4>Selenium</h4>
--        <span class="dose" style="background:var(--sky)">55mcg daily</span>
--        <p>Antioxidant, sperm quality, thyroid health</p>
--      </div>
--      <div class="supp-card" style="border-bottom-color:var(--coral)">
--        <div class="supp-icon">💊</div>
--        <h4>Vitamin C</h4>
--        <span class="dose" style="background:var(--coral)">500mg daily</span>
--        <p>Antioxidant, immunity, collagen for skin</p>
--      </div>
--      <div class="supp-card" style="border-bottom-color:var(--emerald)">
--        <div class="supp-icon">🧬</div>
--        <h4>CoQ10</h4>
--        <span class="dose" style="background:var(--emerald)">200mg daily</span>
--        <p>Mitochondria energy, sperm motility, anti-aging</p>
--      </div>
--      <div class="supp-card" style="border-bottom-color:var(--gold)">
--        <div class="supp-icon">🌑</div>
--        <h4>Shilajit</h4>
--        <span class="dose" style="background:var(--gold)">As directed</span>
--        <p>60+ minerals, testosterone, energy, vitality</p>
--      </div>
--    </div>
--    <p style="text-align:center;color:var(--muted);font-size:0.85rem;margin-top:1.5rem;">⚠️ Koi bhi supplement lene se pehle doctor ya nutritionist se ek baar zaroor milein</p>
--  </div>
--</section>
--
--<!-- DAILY ROUTINE -->
--<section class="section" id="routine">
--  <div class="container">
--    <div class="section-title reveal">
--      <div class="tag">Section 11</div>
--      <h2>Complete Daily Routine</h2>
--      <p>Subah se raat tak — ek perfect din</p>
--    </div>
--    <div class="reveal">
--      <div class="routine-block">
--        <div class="routine-time" style="background:linear-gradient(135deg,#f39c12,#e67e22)">
--          <span>🌅</span> 6:00 – 7:00 AM — Subah Uthna
--        </div>
--        <div class="routine-content">
--          <span class="routine-tag">💧 2 gilaas paani</span>
--          <span class="routine-tag">🍋 Nimbu + Shahad</span>
--          <span class="routine-tag">🚿 Fresh ho jaayein</span>
--          <span class="routine-tag">🧊 Ice cube face par</span>
--        </div>
--      </div>
--      <div class="routine-block">
--        <div class="routine-time" style="background:linear-gradient(135deg,#27ae60,#1e8449)">
--          <span>🏃</span> 7:00 – 8:00 AM — Exercise Time
--        </div>
--        <div class="routine-content">
--          <span class="routine-tag">🧘 Pranayama 10 min</span>
--          <span class="routine-tag">🚶 Walking 20 min</span>
--          <span class="routine-tag">💪 Kegel + Squats</span>
--          <span class="routine-tag">🤸 Stretching</span>
--        </div>
--      </div>
--      <div class="routine-block">
--        <div class="routine-time" style="background:linear-gradient(135deg,#e74c3c,#c0392b)">
--          <span>🍳</span> 8:00 – 9:00 AM — Nashta + Face Routine
--        </div>
--        <div class="routine-content">
--          <span class="routine-tag">🥚 Ande + Badam</span>
--          <span class="routine-tag">🥛 Dudh + Ashwagandha</span>
--          <span class="routine-tag">🌵 Aloe Vera face mask</span>
--          <span class="routine-tag">☀️ Sunscreen lagayein</span>
--        </div>
--      </div>
--      <div class="routine-block">
--        <div class="routine-time" style="background:linear-gradient(135deg,#2980b9,#1a5276)">
--          <span>🍱</span> 1:00 – 2:00 PM — Lunch
--        </div>
--        <div class="routine-content">
--          <span class="routine-tag">🍛 Dal + Roti + Chawal</span>
--          <span class="routine-tag">🥬 Hari sabzi</span>
--          <span class="routine-tag">🥛 Dahi</span>
--          <span class="routine-tag">💧 2 gilaas paani</span>
--        </div>
--      </div>
--      <div class="routine-block">
--        <div class="routine-time" style="background:linear-gradient(135deg,#8e44ad,#6c3483)">
--          <span>🌇</span> 5:00 – 6:00 PM — Shaam
--        </div>
--        <div class="routine-content">
--          <span class="routine-tag">🥜 Mixed nuts</span>
--          <span class="routine-tag">🥥 Naariyal paani</span>
--          <span class="routine-tag">🚶 Evening walk</span>
--          <span class="routine-tag">🍵 Green tea</span>
--        </div>
--      </div>
--      <div class="routine-block">
--        <div class="routine-time" style="background:linear-gradient(135deg,#1abc9c,#148f77)">
--          <span>🌙</span> 8:00 – 10:00 PM — Raat + Neend
--        </div>
--        <div class="routine-content">
--          <span class="routine-tag">🍛 Halka khaana</span>
--          <span class="routine-tag">🧴 Night face routine</span>
--          <span class="routine-tag">🥛 Haldi dudh</span>
--          <span class="routine-tag">📵 Phone band</span>
--          <span class="routine-tag">😴 10-11 baje tak soyein</span>
--        </div>
--      </div>
--    </div>
--  </div>
--</section>
--
--<!-- FAQ -->
--<section class="section section-alt" id="faq">
--  <div class="container">
--    <div class="section-title reveal">
--      <div class="tag">Section 12</div>
--      <h2>Aksar Pooche Jaane Waale Sawaal</h2>
--      <p>Aapke sabse common questions ke jawab</p>
--    </div>
--    <div style="max-width:800px;margin:0 auto;" class="reveal">
--
--      <div class="faq-item">
--        <div class="faq-q" onclick="toggleFaq(this)">
--          Hafte mein kitni baar masturbation normal hai?
--          <span class="arrow">▼</span>
--        </div>
--        <div class="faq-a">
--          Hafte mein 2–4 baar bilkul normal aur healthy hai. Koi fixed number nahi hai — har insaan alag hota hai. Jab tak aap physically aur mentally theek feel kar rahe hain, koi baat nahi. Agar roz 3–4+ baar ho raha hai aur aap rok nahi pa rahe, tab doctor se milein.
--        </div>
--      </div>
--
--      <div class="faq-item">
--        <div class="faq-q" onclick="toggleFaq(this)">
--          Kya masturbation se testosterone kam hota hai?
--          <span class="arrow">▼</span>
--        </div>
--        <div class="faq-a">
--          Short-term mein thoda change ho sakta hai, lekin yeh normal range mein rehta hai aur jaldi wapas aa jaata hai. Studies mein paya gaya ki 7 din abstinence ke baad testosterone 145% tak badh sakta hai temporarily. Lekin regular moderate masturbation se long-term testosterone level par koi bura effect nahi hota.
--        </div>
--      </div>
--
--      <div class="faq-item">
--        <div class="faq-q" onclick="toggleFaq(this)">
--          Sex ke baad kitna paani peena chahiye?
--          <span class="arrow">▼</span>
--        </div>
--        <div class="faq-a">
--          Sex ke turant baad 2–3 gilaas paani peena chahiye. Yeh body ko rehydrate karta hai, electrolytes balance karta hai aur UTI (urinary tract infection) se bachata hai. Naariyal paani aur bhi better option hai kyunki ismein natural electrolytes hote hain.
--        </div>
--      </div>
--
--      <div class="faq-item">
--        <div class="faq-q" onclick="toggleFaq(this)">
--          Sperm count badhane ke liye kya karein?
--          <span class="arrow">▼</span>
--        </div>
--        <div class="faq-a">
--          Sperm count badhane ke liye: Zinc se bhare khaane (kaddoo ke beej, ande), Vitamin C (nimbu, amla), Folic acid (palak, methi), Ashwagandha (studies mein 167% sperm count increase), Omega-3 (akhrot, machli), regular exercise, stress management, aur zyaada garam cheezoin se bachein. Smoking aur alcohol sperm count significantly ghata dete hain.
--        </div>
--      </div>
--
--      <div class="faq-item">
--        <div class="faq-q" onclick="toggleFaq(this)">
--          Face glow ke liye sabse zaroori cheez kya hai?
--          <span class="arrow">▼</span>
--        </div>
--        <div class="faq-a">
--          Face glow ke liye andar se bahar — 3 sabse zaroori cheezein hain: (1) Paani — roz 8–10 gilaas, (2) Neend — 7–8 ghante, (3) Vitamin C waale fruits — aamla, nimbu, santra. Bahar se — Aloe vera roz lagao aur sunscreen zaroor use karo. Yeh 3 cheezein 4 hafte mein visible fark laa sakti hain.
--        </div>
--      </div>
--
--      <div class="faq-item">
--        <div class="faq-q" onclick="toggleFaq(this)">
--          Kya Ashwagandha safe hai? Kaise lein?
--          <span class="arrow">▼</span>
--        </div>
--        <div class="faq-a">
--          Haan, Ashwagandha generally safe hai. Dosage: 300–600mg daily, raat ko sone se pehle garam dudh mein. Isse testosterone badhta hai, stress kam hota hai, sperm count aur motility improve hoti hai. Pregnant women, thyroid patients aur kisi bhi serious condition mein pehle doctor se milein. 3 mahine tak regularly lene par best results milte hain.
--        </div>
--      </div>
--
--      <div class="faq-item">
--        <div class="faq-q" onclick="toggleFaq(this)">
--          Masturbation band karne se kya fayda hoga?
--          <span class="arrow">▼</span>
--        </div>
--        <div class="faq-a">
--          Agar aap moderate masturbation (hafte mein 2–3 baar) kar rahe hain toh band karne ki koi zaroorat nahi. Agar aap NoFap ya abstinence try karna chahte hain, toh benefits mein zyaada energy, better focus, aur real relationships mein improvement ho sakti hai. Lekin yeh scientifically proven nahi hai. Main benefit yeh hota hai ki time aur energy productive kamon mein use hoti hai.
--        </div>
--      </div>
--
--    </div>
--  </div>
--</section>
--
--<!-- FINAL FORMULA -->
--<section class="section" style="padding:3rem 0;">
--  <div class="container">
--    <div class="reveal">
--      <div class="highlight-box">
--        <h3>🎯 Fresh & Glowing Rehne Ka Formula</h3>
--        <p>Sirf itna karo — 3 hafte mein fark dikhega!</p>
--        <div class="formula">
--          <div class="formula-item">😴 Achhi Neend</div>
--          <div class="formula-plus">+</div>
--          <div class="formula-item">💧 8 Gilaas Paani</div>
--          <div class="formula-plus">+</div>
--          <div class="formula-item">🥗 Accha Khaana</div>
--          <div class="formula-plus">+</div>
--          <div class="formula-item">🏃 Exercise</div>
--          <div class="formula-plus">+</div>
--          <div class="formula-item">🌵 Face Routine</div>
--          <div class="formula-plus">=</div>
--          <div class="formula-item" style="background:var(--lime);color:var(--forest);font-weight:700;">✨ Perfect You!</div>
--        </div>
-+    <div style="margin-top:1.4rem;" class="reveal">
-+      <div class="card" style="border-left:5px solid var(--emerald)">
-+        <h3 style="font-family:'Baloo 2';color:var(--forest);font-size:1.15rem;">🔐 Privacy & Safety Notes</h3>
-+        <p style="font-size:0.9rem;color:var(--muted);line-height:1.8;margin-top:0.6rem;">Is static page par koi sign-up form ya personal-health-data collection module intentionally include nahi kiya gaya. Agar aap is site ka extended version deploy karte hain (forms, analytics, comments, chat), to clear privacy policy, consent banner, secure data handling (HTTPS), and age-appropriate safeguards mandatory hone chahiye. Sensitive sexual-health topics ke context mein dignity, consent, and non-judgmental language follow karna essential hai.</p>
-       </div>
-     </div>
-   </div>
- </section>
- 
- <!-- FOOTER -->
- <footer>
--  <strong>🌿 Sampurna Swasthya Guide</strong>
-+  <div style="margin-bottom:0.8rem; opacity:0.9;">📌 Reminder: Consent, respect aur safety har healthy relationship ka base hai.</div>
-+  <strong>🌿 SwasthyaSetu Wellness Guide</strong>
-   <div class="disclaimer">
--    ⚠️ Yeh website sirf educational purposes ke liye hai. Kisi bhi specific health problem ya medical condition ke liye kripya qualified doctor ya healthcare professional se milein. Yahan di gayi jaankari professional medical advice ka replacement nahi hai.
-+    ⚠️ Yeh website sirf educational purposes ke liye hai. Yeh medical, legal, psychological, ya emergency advice ka replacement nahi hai. Kisi bhi specific health problem, mental distress, sexual dysfunction, fertility concern, ya medication decision ke liye qualified doctor/healthcare professional se milna zaroori hai.
-   </div>
- </footer>
- 
- <button class="back-top" id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
- 
- <script>
-   // Progress bar
-   window.addEventListener('scroll', () => {
-     const scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
-     document.getElementById('progress').style.width = scrolled + '%';
-     document.getElementById('backTop').classList.toggle('visible', window.scrollY > 400);
-   });
- 
-   // Reveal on scroll
-   const observer = new IntersectionObserver((entries) => {
-     entries.forEach((entry, i) => {
-       if (entry.isIntersecting) {
-         setTimeout(() => entry.target.classList.add('visible'), i * 80);
-       }
-     });
-   }, { threshold: 0.1 });
- 
-   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
- 
-   // FAQ toggle
-   function toggleFaq(el) {
-     const answer = el.nextElementSibling;
-     const isOpen = el.classList.contains('open');
-     document.querySelectorAll('.faq-q').forEach(q => {
-       q.classList.remove('open');
-       q.nextElementSibling.classList.remove('show');
-     });
-     if (!isOpen) {
-       el.classList.add('open');
-       answer.classList.add('show');
-     }
-   }
- </script>
- </body>
--</html>
-+</html>
-\ No newline at end of file
-diff --git a/robots.txt b/robots.txt
-new file mode 100644
-index 0000000000000000000000000000000000000000..29ffd8298a7c4fef788dbdaf4a7bd9207727d0f0
---- /dev/null
-+++ b/robots.txt
-@@ -0,0 +1,4 @@
-+User-agent: *
-+Allow: /
-+
-+Sitemap: https://swasthyasetuguide.in/sitemap.xml
-diff --git a/sitemap.xml b/sitemap.xml
-new file mode 100644
-index 0000000000000000000000000000000000000000..a3517134bdf73f7e963eedfa4f8487f7da2ee19c
---- /dev/null
-+++ b/sitemap.xml
-@@ -0,0 +1,8 @@
-+<?xml version="1.0" encoding="UTF-8"?>
-+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-+  <url>
-+    <loc>https://swasthyasetuguide.in/</loc>
-+    <changefreq>weekly</changefreq>
-+    <priority>1.0</priority>
-+  </url>
-+</urlset>
- 
-EOF
-)
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="SwasthyaSetu Wellness Guide ek detailed Hindi health portal hai jisme sexual wellness, sperm recovery, diet, exercise, skin care, myths vs facts, mental health aur doctor consultation ke practical steps diye gaye hain.">
+<meta name="keywords" content="sexual health hindi, masturbation myths, sperm recovery diet, men wellness india, testosterone lifestyle, skin glow routine men, kegel exercise hindi, urologist consultation, semen health tips, ayurvedic male health">
+<meta name="author" content="SwasthyaSetu Wellness Guide">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<meta name="theme-color" content="#0d3b2e">
+<meta property="og:type" content="website">
+<meta property="og:title" content="SwasthyaSetu Wellness Guide - Sexual Health, Recovery & Lifestyle">
+<meta property="og:description" content="Hindi recovery guide: diet, exercise, sperm health, myths, mental wellness, legal safety notes, and when to see a doctor.">
+<meta property="og:locale" content="hi_IN">
+<meta property="og:site_name" content="SwasthyaSetu Wellness Guide">
+<meta property="og:url" content="https://swasthyasetuguide.in/">
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:title" content="SwasthyaSetu Wellness Guide - Sexual Health, Recovery & Lifestyle">
+<meta property="twitter:description" content="Sexual wellness, recovery, nutrition, safety, and mental health guidance in Hindi.">
+<link rel="canonical" href="https://swasthyasetuguide.in/">
+<title>SwasthyaSetu Wellness Guide - Sexual Health, Recovery & Lifestyle</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tiro+Devanagari+Hindi:ital@0;1&family=Baloo+2:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --forest: #0d3b2e;
+    --emerald: #1a6b4a;
+    --mint: #2ecc71;
+    --lime: #a8e063;
+    --cream: #fdf6ec;
+    --warm: #f9f0e1;
+    --gold: #f0a500;
+    --amber: #e67e22;
+    --coral: #e74c3c;
+    --sky: #2980b9;
+    --navy: #1a3a5c;
+    --lavender: #7c5cbf;
+    --rose: #c0392b;
+    --text: #1a1a2e;
+    --muted: #5a6a7a;
+    --card-shadow: 0 8px 32px rgba(13,59,46,0.13);
+    --glow: 0 0 40px rgba(46,204,113,0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Noto Sans Devanagari', 'Baloo 2', sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    overflow-x: hidden;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    background: linear-gradient(135deg, var(--forest) 0%, #0a4d36 40%, #16613e 70%, var(--emerald) 100%);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center; padding: 2rem;
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 20% 50%, rgba(46,204,113,0.12) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 20%, rgba(168,224,99,0.08) 0%, transparent 50%);
+  }
+  .hero-circles {
+    position: absolute; inset: 0; overflow: hidden; pointer-events: none;
+  }
+  .hero-circles span {
+    position: absolute; border-radius: 50%;
+    border: 1px solid rgba(46,204,113,0.15);
+    animation: pulse-ring 6s ease-in-out infinite;
+  }
+  .hero-circles span:nth-child(1) { width:200px;height:200px;top:-60px;right:-40px;animation-delay:0s; }
+  .hero-circles span:nth-child(2) { width:350px;height:350px;bottom:-100px;left:-80px;animation-delay:2s; }
+  .hero-circles span:nth-child(3) { width:120px;height:120px;top:40%;left:5%;animation-delay:4s; }
+  @keyframes pulse-ring {
+    0%,100% { transform: scale(1); opacity: 0.4; }
+    50% { transform: scale(1.08); opacity: 0.8; }
+  }
+
+  .hero-badge {
+    display: inline-block;
+    background: rgba(46,204,113,0.2);
+    border: 1px solid rgba(46,204,113,0.4);
+    color: var(--lime);
+    font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase;
+    padding: 0.4rem 1.2rem; border-radius: 50px;
+    margin-bottom: 1.5rem;
+    animation: fadeDown 0.8s ease;
+  }
+  .hero h1 {
+    font-family: 'Baloo 2', sans-serif;
+    font-size: clamp(2.2rem, 6vw, 4.5rem);
+    font-weight: 800; color: white;
+    line-height: 1.15; margin-bottom: 1rem;
+    animation: fadeDown 1s ease 0.2s both;
+  }
+  .hero h1 span { color: var(--lime); }
+  .hero p {
+    font-size: clamp(1rem, 2.5vw, 1.25rem);
+    color: rgba(255,255,255,0.75);
+    max-width: 650px; margin-bottom: 2.5rem;
+    animation: fadeDown 1s ease 0.4s both;
+  }
+  .hero-stats {
+    display: flex; gap: 2rem; flex-wrap: wrap; justify-content: center;
+    animation: fadeDown 1s ease 0.6s both;
+  }
+  .stat-chip {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    backdrop-filter: blur(10px);
+    padding: 0.7rem 1.4rem; border-radius: 12px;
+    color: white; text-align: center;
+  }
+  .stat-chip strong { display: block; font-size: 1.6rem; color: var(--lime); font-family: 'Baloo 2'; }
+  .stat-chip span { font-size: 0.8rem; opacity: 0.8; }
+
+  .scroll-hint {
+    position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
+    color: rgba(255,255,255,0.5); font-size: 0.8rem;
+    display: flex; flex-direction: column; align-items: center; gap: 0.4rem;
+    animation: bounce 2s infinite;
+  }
+  .scroll-hint::after {
+    content: '▼'; font-size: 1rem;
+  }
+  @keyframes bounce { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(6px)} }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(13,59,46,0.97);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(46,204,113,0.2);
+    padding: 0 1rem;
+  }
+  .nav-inner {
+    max-width: 1100px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 58px;
+  }
+  .nav-logo { color: var(--lime); font-family: 'Baloo 2'; font-weight: 800; font-size: 1.2rem; }
+  .nav-links {
+    display: flex; gap: 0.2rem; flex-wrap: wrap;
+  }
+  .nav-links a {
+    color: rgba(255,255,255,0.7);
+    text-decoration: none; font-size: 0.82rem;
+    padding: 0.4rem 0.75rem; border-radius: 6px;
+    transition: all 0.2s;
+  }
+  .nav-links a:hover { color: white; background: rgba(46,204,113,0.2); }
+
+  /* ── LAYOUT ── */
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; }
+  .section { padding: 5rem 0; }
+  .section-alt { background: var(--warm); }
+
+  .section-title {
+    text-align: center; margin-bottom: 3rem;
+  }
+  .section-title .tag {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--emerald), var(--mint));
+    color: white; font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase;
+    padding: 0.3rem 1rem; border-radius: 50px; margin-bottom: 0.8rem;
+  }
+  .section-title h2 {
+    font-family: 'Baloo 2', sans-serif; font-size: clamp(1.8rem, 4vw, 2.6rem);
+    font-weight: 800; color: var(--forest);
+  }
+  .section-title p { color: var(--muted); margin-top: 0.5rem; font-size: 1rem; }
+
+  /* ── CARDS ── */
+  .card {
+    background: white; border-radius: 18px;
+    box-shadow: var(--card-shadow);
+    padding: 2rem; transition: transform 0.3s, box-shadow 0.3s;
+    border: 1px solid rgba(46,204,113,0.1);
+  }
+  .card:hover { transform: translateY(-4px); box-shadow: 0 16px 48px rgba(13,59,46,0.18); }
+
+  .card-icon {
+    width: 52px; height: 52px; border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem; margin-bottom: 1rem;
+  }
+
+  /* ── GRID ── */
+  .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+  .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; }
+  .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.2rem; }
+
+  /* ── BODY LOSS TABLE ── */
+  .nutrient-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem;
+  }
+  .nutrient-card {
+    background: white; border-radius: 16px; padding: 1.4rem 1rem;
+    text-align: center; box-shadow: var(--card-shadow);
+    border-top: 4px solid var(--mint);
+    transition: transform 0.2s;
+  }
+  .nutrient-card:hover { transform: translateY(-3px); }
+  .nutrient-card .icon { font-size: 2rem; margin-bottom: 0.6rem; }
+  .nutrient-card h4 { font-size: 1rem; color: var(--forest); font-weight: 700; }
+  .nutrient-card p { font-size: 0.82rem; color: var(--muted); margin-top: 0.3rem; }
+  .nutrient-card .amount {
+    display: inline-block; margin-top: 0.5rem;
+    background: linear-gradient(135deg, var(--emerald), var(--mint));
+    color: white; font-size: 0.72rem; padding: 0.2rem 0.7rem; border-radius: 50px;
+  }
+
+  /* ── SPERM TIMELINE ── */
+  .timeline {
+    position: relative; padding-left: 2.5rem;
+  }
+  .timeline::before {
+    content: ''; position: absolute; left: 10px; top: 0; bottom: 0;
+    width: 2px; background: linear-gradient(to bottom, var(--mint), var(--lime), var(--gold));
+  }
+  .tl-item {
+    position: relative; margin-bottom: 1.8rem;
+  }
+  .tl-dot {
+    position: absolute; left: -2rem; top: 0.3rem;
+    width: 16px; height: 16px; border-radius: 50%;
+    background: var(--mint); border: 3px solid white;
+    box-shadow: 0 0 0 3px var(--mint);
+  }
+  .tl-item h4 { font-size: 1rem; font-weight: 700; color: var(--forest); }
+  .tl-item p { font-size: 0.9rem; color: var(--muted); margin-top: 0.3rem; }
+  .tl-item .days {
+    display: inline-block; background: var(--emerald); color: white;
+    font-size: 0.8rem; padding: 0.2rem 0.8rem; border-radius: 50px;
+    margin-top: 0.4rem; font-weight: 600;
+  }
+
+  /* ── DIET PLAN ── */
+  .meal-card {
+    border-radius: 18px; overflow: hidden;
+    box-shadow: var(--card-shadow); transition: transform 0.3s;
+  }
+  .meal-card:hover { transform: translateY(-4px); }
+  .meal-header {
+    padding: 1.2rem 1.5rem;
+    display: flex; align-items: center; gap: 1rem;
+  }
+  .meal-header .meal-icon { font-size: 2rem; }
+  .meal-header h3 { color: white; font-family: 'Baloo 2'; font-size: 1.1rem; font-weight: 700; }
+  .meal-header span { color: rgba(255,255,255,0.75); font-size: 0.82rem; }
+  .meal-body { background: white; padding: 1.4rem 1.5rem; }
+  .meal-items { list-style: none; }
+  .meal-items li {
+    padding: 0.5rem 0; border-bottom: 1px solid #f0f0f0;
+    font-size: 0.92rem; display: flex; align-items: center; gap: 0.6rem;
+  }
+  .meal-items li:last-child { border-bottom: none; }
+  .meal-items li::before { content: '✓'; color: var(--mint); font-weight: 700; }
+
+  /* ── FOODS ── */
+  .food-card {
+    background: white; border-radius: 16px; padding: 1.4rem;
+    box-shadow: var(--card-shadow); text-align: center;
+    transition: all 0.3s; border: 2px solid transparent;
+    cursor: default;
+  }
+  .food-card:hover { border-color: var(--mint); transform: translateY(-4px); }
+  .food-card .food-emoji { font-size: 2.5rem; margin-bottom: 0.6rem; }
+  .food-card h4 { font-size: 0.95rem; font-weight: 700; color: var(--forest); }
+  .food-card p { font-size: 0.82rem; color: var(--muted); margin-top: 0.3rem; }
+  .food-card .benefit {
+    display: inline-block; margin-top: 0.6rem;
+    background: var(--lime); color: var(--forest);
+    font-size: 0.72rem; font-weight: 600;
+    padding: 0.2rem 0.7rem; border-radius: 50px;
+  }
+
+  /* ── EXERCISE ── */
+  .exercise-card {
+    background: white; border-radius: 18px; padding: 1.5rem;
+    box-shadow: var(--card-shadow); display: flex; gap: 1rem;
+    align-items: flex-start; transition: transform 0.3s;
+    border-left: 5px solid var(--mint);
+  }
+  .exercise-card:hover { transform: translateX(4px); }
+  .exercise-card .ex-icon {
+    font-size: 2rem; background: var(--warm);
+    width: 52px; height: 52px; border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .exercise-card h4 { font-size: 1rem; font-weight: 700; color: var(--forest); }
+  .exercise-card .sets { color: var(--amber); font-size: 0.82rem; font-weight: 600; margin-top: 0.2rem; }
+  .exercise-card p { font-size: 0.88rem; color: var(--muted); margin-top: 0.3rem; }
+
+  /* ── FACE CARE ── */
+  .step-card {
+    background: white; border-radius: 16px; padding: 1.4rem;
+    box-shadow: var(--card-shadow); position: relative;
+    overflow: hidden;
+  }
+  .step-num {
+    position: absolute; top: -10px; right: -10px;
+    width: 50px; height: 50px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--lavender), #9b59b6);
+    color: white; font-size: 1.3rem; font-weight: 800; font-family: 'Baloo 2';
+    display: flex; align-items: center; justify-content: center;
+  }
+  .step-card h4 { font-size: 1rem; font-weight: 700; color: var(--forest); margin-bottom: 0.4rem; }
+  .step-card p { font-size: 0.88rem; color: var(--muted); }
+
+  /* ── MYTHS vs FACTS ── */
+  .myth-fact {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+    border-radius: 18px; overflow: hidden; box-shadow: var(--card-shadow);
+  }
+  .myth-side { background: #fff5f5; padding: 1.5rem; }
+  .fact-side { background: #f0fdf6; padding: 1.5rem; }
+  .myth-side h4 { color: var(--coral); font-family: 'Baloo 2'; font-size: 1rem; margin-bottom: 0.8rem; }
+  .fact-side h4 { color: var(--emerald); font-family: 'Baloo 2'; font-size: 1rem; margin-bottom: 0.8rem; }
+  .myth-side p, .fact-side p { font-size: 0.88rem; color: var(--muted); }
+
+  /* ── DO DONT ── */
+  .do-dont-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .do-list, .dont-list { border-radius: 18px; overflow: hidden; }
+  .list-header {
+    padding: 1rem 1.5rem; font-family: 'Baloo 2'; font-size: 1.1rem; font-weight: 700; color: white;
+    display: flex; align-items: center; gap: 0.6rem;
+  }
+  .do-list .list-header { background: linear-gradient(135deg, var(--emerald), var(--mint)); }
+  .dont-list .list-header { background: linear-gradient(135deg, var(--coral), #c0392b); }
+  .list-body { background: white; box-shadow: var(--card-shadow); }
+  .list-body li {
+    padding: 0.75rem 1.5rem; border-bottom: 1px solid #f5f5f5;
+    font-size: 0.9rem; display: flex; align-items: center; gap: 0.7rem;
+  }
+  .list-body li:last-child { border-bottom: none; }
+  .do-list .list-body li::before { content: '✓'; color: var(--mint); font-weight: 800; font-size: 1rem; }
+  .dont-list .list-body li::before { content: '✗'; color: var(--coral); font-weight: 800; font-size: 1rem; }
+
+  /* ── SUPPLEMENTS ── */
+  .supp-card {
+    background: white; border-radius: 16px; padding: 1.4rem;
+    box-shadow: var(--card-shadow); text-align: center;
+    border-bottom: 4px solid;
+  }
+  .supp-card .supp-icon { font-size: 2.2rem; margin-bottom: 0.5rem; }
+  .supp-card h4 { font-size: 0.95rem; font-weight: 700; color: var(--forest); }
+  .supp-card .dose { font-size: 0.82rem; color: white; padding: 0.2rem 0.7rem; border-radius: 50px; margin-top: 0.4rem; display: inline-block; }
+  .supp-card p { font-size: 0.82rem; color: var(--muted); margin-top: 0.4rem; }
+
+  /* ── DRINKS ── */
+  .drink-card {
+    background: white; border-radius: 16px; padding: 1.4rem;
+    box-shadow: var(--card-shadow); text-align: center;
+    transition: transform 0.3s;
+  }
+  .drink-card:hover { transform: translateY(-4px); }
+  .drink-card .drink-icon { font-size: 3rem; margin-bottom: 0.5rem; }
+  .drink-card h4 { font-size: 0.95rem; font-weight: 700; color: var(--forest); }
+  .drink-card .timing { color: var(--amber); font-size: 0.8rem; font-weight: 600; margin-top: 0.2rem; }
+  .drink-card p { font-size: 0.82rem; color: var(--muted); margin-top: 0.3rem; }
+
+  /* ── DAILY ROUTINE ── */
+  .routine-block {
+    background: white; border-radius: 18px; overflow: hidden; box-shadow: var(--card-shadow);
+    margin-bottom: 1rem;
+  }
+  .routine-time {
+    padding: 1rem 1.5rem; font-family: 'Baloo 2'; font-weight: 700; font-size: 1rem;
+    color: white; display: flex; align-items: center; gap: 0.8rem;
+  }
+  .routine-content {
+    padding: 1rem 1.5rem; display: flex; gap: 0.6rem; flex-wrap: wrap;
+  }
+  .routine-tag {
+    background: var(--warm); color: var(--forest);
+    font-size: 0.85rem; padding: 0.35rem 0.9rem; border-radius: 50px;
+    border: 1px solid rgba(0,0,0,0.08);
+  }
+
+  /* ── HIGHLIGHT BOX ── */
+  .highlight-box {
+    background: linear-gradient(135deg, var(--forest), var(--emerald));
+    border-radius: 20px; padding: 2.5rem;
+    text-align: center; color: white;
+    position: relative; overflow: hidden;
+  }
+  .highlight-box::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse at top right, rgba(168,224,99,0.2) 0%, transparent 60%);
+  }
+  .highlight-box h3 { font-family: 'Baloo 2'; font-size: 1.6rem; margin-bottom: 0.5rem; }
+  .highlight-box p { opacity: 0.85; font-size: 1rem; }
+  .highlight-box .formula {
+    margin-top: 1.5rem;
+    display: flex; flex-wrap: wrap; gap: 0.8rem; justify-content: center;
+  }
+  .formula-item {
+    background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25);
+    padding: 0.6rem 1.2rem; border-radius: 50px; font-size: 0.9rem;
+    backdrop-filter: blur(5px);
+  }
+  .formula-plus { color: var(--lime); font-size: 1.3rem; font-weight: 700; display: flex; align-items: center; }
+
+  /* ── FAQ ── */
+  .faq-item {
+    background: white; border-radius: 14px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+    margin-bottom: 0.8rem; overflow: hidden;
+  }
+  .faq-q {
+    width: 100%; background: none; border: none; text-align: left;
+    font-family: inherit;
+    padding: 1.1rem 1.5rem; font-weight: 600; font-size: 0.95rem;
+    cursor: pointer; display: flex; justify-content: space-between; align-items: center;
+    color: var(--forest); transition: background 0.2s;
+  }
+  .faq-q:hover { background: var(--warm); }
+  .faq-q .arrow { transition: transform 0.3s; }
+  .faq-q[aria-expanded="true"] .arrow { transform: rotate(180deg); }
+  .faq-a {
+    display: none; padding: 0.9rem 1.5rem 1.1rem;
+    font-size: 0.9rem; color: var(--muted); line-height: 1.7;
+    border-top: 1px solid #f0f0f0;
+  }
+  .faq-a.show { display: block; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--forest);
+    color: rgba(255,255,255,0.7);
+    text-align: center; padding: 2.5rem 1.5rem;
+    font-size: 0.88rem;
+  }
+  footer strong { color: var(--lime); }
+  footer .disclaimer {
+    max-width: 600px; margin: 0.8rem auto 0;
+    font-size: 0.8rem; opacity: 0.6; line-height: 1.6;
+  }
+
+  /* ── PROGRESS BAR ── */
+  .progress-bar {
+    position: fixed; top: 0; left: 0; height: 3px;
+    background: linear-gradient(to right, var(--mint), var(--lime), var(--gold));
+    z-index: 200; transition: width 0.1s;
+    width: 0%;
+  }
+
+  /* ── BACK TO TOP ── */
+  .back-top {
+    position: fixed; bottom: 2rem; right: 2rem;
+    width: 46px; height: 46px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--emerald), var(--mint));
+    color: white; border: none; cursor: pointer;
+    font-size: 1.2rem; box-shadow: 0 4px 16px rgba(26,107,74,0.4);
+    opacity: 0; transition: opacity 0.3s; z-index: 150;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .back-top.visible { opacity: 1; }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .reveal {
+    opacity: 0; transform: translateY(30px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    .myth-fact, .do-dont-grid { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+    .hero-stats { gap: 1rem; }
+  }
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "SwasthyaSetu Wellness Guide",
+  "url": "https://swasthyasetuguide.in/",
+  "inLanguage": "hi",
+  "description": "Hindi guide for sexual health recovery, nutrition, exercise, and mental wellbeing."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type":"Question","name":"Hafte mein kitni baar masturbation normal hai?","acceptedAnswer":{"@type":"Answer","text":"Hafte mein 2-4 baar kai logon ke liye normal hota hai, lekin individual differences important hain."}},
+    {"@type":"Question","name":"Kya masturbation se testosterone kam hota hai?","acceptedAnswer":{"@type":"Answer","text":"Temporary hormonal fluctuations ho sakte hain lekin long-term testosterone par major negative effect commonly establish nahi hota."}},
+    {"@type":"Question","name":"Sex ke baad kitna paani peena chahiye?","acceptedAnswer":{"@type":"Answer","text":"Hydration ke liye 2-3 gilaas paani helpful ho sakta hai, especially agar dehydration ho."}},
+    {"@type":"Question","name":"Sperm count badhane ke liye kya karein?","acceptedAnswer":{"@type":"Answer","text":"Balanced diet, exercise, stress control, sleep, and smoking-alcohol reduction commonly recommended steps hain."}},
+    {"@type":"Question","name":"Face glow ke liye sabse zaroori cheez kya hai?","acceptedAnswer":{"@type":"Answer","text":"Hydration, quality sleep, nutritious diet, aur sun protection primary factors hain."}},
+    {"@type":"Question","name":"Kya Ashwagandha safe hai?","acceptedAnswer":{"@type":"Answer","text":"Generally many adults tolerate it, but existing conditions ya medications hone par doctor consultation zaroor karein."}},
+    {"@type":"Question","name":"Masturbation band karne se kya fayda hoga?","acceptedAnswer":{"@type":"Answer","text":"Agar behavior compulsive ho to control karna focus aur routine improve kar sakta hai; moderate pattern mein strict abstinence sabke liye required nahi."}}
+  ]
+}
+</script>
+
+</head>
+<body>
+
+<div class="progress-bar" id="progress"></div>
+
+<main>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-circles">
+    <span></span><span></span><span></span>
+  </div>
+  <div class="hero-badge">🌿 SwasthyaSetu Wellness Guide</div>
+  <h1>Sex & Masturbation ke<br><span>Baad Body Care</span></h1>
+  <p>Apni body ko samjho, sahi khaana khao, exercise karo aur face glow karo — sabkuch ek jagah</p>
+  <div class="hero-stats">
+    <div class="stat-chip">
+      <strong>90</strong>
+      <span>Din mein Sperm banta hai</span>
+    </div>
+    <div class="stat-chip">
+      <strong>20Cr+</strong>
+      <span>Sperm roz bante hain</span>
+    </div>
+    <div class="stat-chip">
+      <strong>8+</strong>
+      <span>Sections ki Poori Guide</span>
+    </div>
+  </div>
+  <div class="scroll-hint">Scroll karein</div>
+</section>
+
+<!-- NAV -->
+<nav aria-label="Main navigation">
+  <div class="nav-inner">
+    <div class="nav-logo">🌿 SwasthyaSetu</div>
+    <div class="nav-links">
+      <a href="#body-loss">Body Loss</a>
+      <a href="#sperm">Sperm</a>
+      <a href="#diet">Diet</a>
+      <a href="#foods">Foods</a>
+      <a href="#exercise">Exercise</a>
+      <a href="#face">Face Care</a>
+      <a href="#drinks">Drinks</a>
+      <a href="#myths">Myths</a>
+      <a href="#dodont">Do/Don't</a>
+      <a href="#supplements">Supplements</a>
+      <a href="#routine">Routine</a>
+      <a href="#mind">Mind</a>
+      <a href="#doctor">Doctor</a>
+      <a href="#knowledge-hub">Guide</a>
+      <a href="#faq">FAQ</a>
+      <a href="#legal">Legal</a>
+    </div>
+  </div>
+</nav>
+
+<!-- SECTION 1: BODY LOSS -->
+<section class="section" id="body-loss">
+  <div class="container">
+    <div class="section-title reveal">
+      <div class="tag">Section 01</div>
+      <h2>Body Mein Kya Kami Hoti Hai?</h2>
+      <p>Sex / Masturbation ke baad in poshan tattvon ki kami hoti hai</p>
+    </div>
+    <div class="nutrient-grid reveal">
+      <div class="nutrient-card">
+        <div class="icon">⚡</div>
+        <h4>Zinc (जिंक)</h4>
+        <p>Sabse zyaada kharach hota hai — immunity aur sperm health ke liye zaroori</p>
+        <span class="amount">3–5mg per ejaculation</span>
+      </div>
+      <div class="nutrient-card">
+        <div class="icon">💪</div>
+        <h4>Protein (प्रोटीन)</h4>
+        <p>Muscles, energy aur body repair ke liye</p>
+        <span class="amount">~5g per ejaculation</span>
+      </div>
+      <div class="nutrient-card">
+        <div class="icon">🍊</div>
+        <h4>Vitamin C</h4>
+        <p>Antioxidant — sperm ko damage se bachata hai</p>
+        <span class="amount">Thodi matra</span>
+      </div>
+      <div class="nutrient-card">
+        <div class="icon">🦴</div>
+        <h4>Calcium & Magnesium</h4>
+        <p>Muscles aur nerves ke liye zaruri</p>
+        <span class="amount">Kam matra</span>
+      </div>
+      <div class="nutrient-card">
+        <div class="icon">🔬</div>
+        <h4>Selenium (सेलेनियम)</h4>
+        <p>Sperm motility (chalney ki kshamta) ke liye</p>
+        <span class="amount">Thodi matra</span>
+      </div>
+      <div class="nutrient-card">
+        <div class="icon">💧</div>
+        <h4>Paani (Fluids)</h4>
+        <p>Dehydration hoti hai — turant paani pina zaroori</p>
+        <span class="amount">Significant</span>
+      </div>
+      <div class="nutrient-card">
+        <div class="icon">🍬</div>
+        <h4>Fructose (Sugar)</h4>
+        <p>Sperm ko energy deta hai</p>
+        <span class="amount">Natural sugar</span>
+      </div>
+      <div class="nutrient-card">
+        <div class="icon">🧬</div>
+        <h4>Folic Acid</h4>
+        <p>Sperm DNA health ke liye important</p>
+        <span class="amount">Thodi matra</span>
+      </div>
+    </div>
+
+    <div style="margin-top: 2rem;" class="reveal">
+      <div class="highlight-box">
+        <h3>💡 Important Baat</h3>
+        <p>Ek badhiya khaane se — jaise 2 ande + 1 gilaas dudh — in sabki kami <strong>turant poori ho jaati hai</strong>. Body bahut strong hai!</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 2: SPERM -->
+<section class="section section-alt" id="sperm">
+  <div class="container">
+    <div class="section-title reveal">
+      <div class="tag">Section 02</div>
+      <h2>Sperm Kaise Banta Hai?</h2>
+      <p>Poori scientific jaankari — step by step</p>
+    </div>
+    <div class="grid-2 reveal">
+      <div class="card">
+        <h3 style="font-family:'Baloo 2';color:var(--forest);margin-bottom:1.5rem;font-size:1.2rem;">⏱️ Sperm Banne ki Timeline</h3>
+        <div class="timeline">
+          <div class="tl-item">
+            <div class="tl-dot"></div>
+            <h4>Spermatogenesis shuru hoti hai</h4>
+            <p>Testicles mein stem cells se sperm banna shuru hota hai</p>
+            <span class="days">Din 1–64</span>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot" style="background:var(--lime)"></div>
+            <h4>Sperm mature hota hai</h4>
+            <p>Epididymis mein sperm mature hota hai aur swimming seekhta hai</p>
+            <span class="days">Din 65–80 (2–3 hafta)</span>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot" style="background:var(--gold)"></div>
+            <h4>Sperm ready hota hai</h4>
+            <p>Sperm poori tarah tayaar — strong aur active</p>
+            <span class="days">~Din 90</span>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot" style="background:var(--amber)"></div>
+            <h4>Naya cycle shuru</h4>
+            <p>Body continuously nayi cells se naye sperm banati rehti hai</p>
+            <span class="days">Lagatar jaari</span>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="card" style="margin-bottom:1.2rem;">
+          <h3 style="font-family:'Baloo 2';color:var(--forest);margin-bottom:1rem;font-size:1.1rem;">📊 Kuch Interesting Numbers</h3>
+          <div style="display:flex;flex-direction:column;gap:0.8rem;">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:0.7rem 1rem;background:var(--warm);border-radius:10px;">
+              <span style="font-size:0.9rem;">Roz kitna banta hai?</span>
+              <strong style="color:var(--emerald);">10–20 Crore</strong>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:0.7rem 1rem;background:var(--warm);border-radius:10px;">
+              <span style="font-size:0.9rem;">Ek baar mein kitna niklta hai?</span>
+              <strong style="color:var(--emerald);">15–50 Crore</strong>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:0.7rem 1rem;background:var(--warm);border-radius:10px;">
+              <span style="font-size:0.9rem;">Poora time lagne mein?</span>
+              <strong style="color:var(--emerald);">~90 Din</strong>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:0.7rem 1rem;background:var(--warm);border-radius:10px;">
+              <span style="font-size:0.9rem;">Sperm ki speed?</span>
+              <strong style="color:var(--emerald);">25–30 cm/hour</strong>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:0.7rem 1rem;background:var(--warm);border-radius:10px;">
+              <span style="font-size:0.9rem;">Normal temperature?</span>
+              <strong style="color:var(--emerald);">34–35°C</strong>
+            </div>
+          </div>
+        </div>
+        <div class="card" style="background:linear-gradient(135deg,#e8f5e9,#f1f8e9);">
+          <h4 style="color:var(--emerald);font-family:'Baloo 2';margin-bottom:0.5rem;">🌡️ Sperm Health Tips</h4>
+          <ul style="list-style:none;font-size:0.88rem;color:var(--muted);display:flex;flex-direction:column;gap:0.4rem;">
+            <li>✅ Tight kapde na paheno — testicles ka temp badhta hai</li>
+            <li>✅ Zyaada garam paani mein na baithein</li>
+            <li>✅ Laptop seedha god mein na rakhein</li>
+            <li>✅ Smoking bilkul band karein</li>
+            <li>✅ Alcohol kam karein</li>
+            <li>✅ Stress manage karein</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 3: DIET PLAN -->
+<section class="section" id="diet">
+  <div class="container">
+    <div class="section-title reveal">
+      <div class="tag">Section 03</div>
+      <h2>Poora Din Ka Diet Plan</h2>
+      <p>Subah se raat tak — kya khayein, kab khayein</p>
+    </div>
+    <div class="grid-2 reveal">
+
+      <div class="meal-card">
+        <div class="meal-header" style="background:linear-gradient(135deg,#f39c12,#e67e22)">
+          <span class="meal-icon">🌅</span>
+          <div>
+            <h3>Uthte Hi (Subah)</h3>
+            <span>6:00 – 7:00 AM</span>
+          </div>
+        </div>
+        <div class="meal-body">
+          <ul class="meal-items">
+            <li>2–3 gilaas gunguna paani (khali pet)</li>
+            <li>Nimbu + Shahad (1 tsp shahad + aadha nimbu)</li>
+            <li>Aloe Vera Juice (optional - skin ke liye)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="meal-card">
+        <div class="meal-header" style="background:linear-gradient(135deg,#27ae60,#1e8449)">
+          <span class="meal-icon">🍳</span>
+          <div>
+            <h3>Nashta (Breakfast)</h3>
+            <span>8:00 – 9:00 AM</span>
+          </div>
+        </div>
+        <div class="meal-body">
+          <ul class="meal-items">
+            <li>5–7 bhige badam + 2–3 akhrot</li>
+            <li>2 uble ande ya paneer bhurji</li>
+            <li>1 gilaas dudh + Ashwagandha (aadha chammach)</li>
+            <li>Oats ya Daliya (fiber ke liye)</li>
+            <li>Kela (potassium + energy)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="meal-card">
+        <div class="meal-header" style="background:linear-gradient(135deg,#2980b9,#1a5276)">
+          <span class="meal-icon">🍱</span>
+          <div>
+            <h3>Dopahar (Lunch)</h3>
+            <span>1:00 – 2:00 PM</span>
+          </div>
+        </div>
+        <div class="meal-body">
+          <ul class="meal-items">
+            <li>2 roti + dal (moong/masoor/chana)</li>
+            <li>Chawal (agar chahein)</li>
+            <li>Hare sabziyaan — palak, methi, broccoli</li>
+            <li>Dahi (curd) — probiotics ke liye</li>
+            <li>Salad + paani 2 gilaas</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="meal-card">
+        <div class="meal-header" style="background:linear-gradient(135deg,#8e44ad,#6c3483)">
+          <span class="meal-icon">☕</span>
+          <div>
+            <h3>Shaam (Evening)</h3>
+            <span>5:00 – 6:00 PM</span>
+          </div>
+        </div>
+        <div class="meal-body">
+          <ul class="meal-items">
+            <li>Mixed nuts — kaju, badam, pista, akhrot</li>
+            <li>Naariyal paani (coconut water)</li>
+            <li>Kela ya 2–3 khajoor (dates)</li>
+            <li>Green tea ya black coffee (optional)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="meal-card">
+        <div class="meal-header" style="background:linear-gradient(135deg,#1abc9c,#148f77)">
+          <span class="meal-icon">🌙</span>
+          <div>
+            <h3>Raat (Dinner)</h3>
+            <span>8:00 – 9:00 PM</span>
+          </div>
+        </div>
+        <div class="meal-body">
+          <ul class="meal-items">
+            <li>Halka khaana — dal + 1–2 roti</li>
+            <li>Grilled chicken / fish (non-veg log)</li>
+            <li>Hara salad</li>
+            <li>Sone se 30 min pehle: Haldi waala dudh (Golden Milk)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="meal-card">
+        <div class="meal-header" style="background:linear-gradient(135deg,#e74c3c,#c0392b)">
+          <span class="meal-icon">🚫</span>
+          <div>
+            <h3>Bilkul Na Khayein</h3>
+            <span>Harmful Foods</span>
+          </div>
+        </div>
+        <div class="meal-body">
+          <ul class="meal-items">
+            <li>Cold drinks / Soda / Packed juices</li>
+            <li>Zyaada oily / fried food</li>
+            <li>Maida products (white bread, biscuits)</li>
+            <li>Excess sugar / sweets</li>
+            <li>Alcohol aur smoking — sperm killer hai</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 4: BEST FOODS -->
+<section class="section section-alt" id="foods">
+  <div class="container">
+    <div class="section-title reveal">
+      <div class="tag">Section 04</div>
+      <h2>Best Recovery Foods</h2>
+      <p>Ye khaane sperm quality, energy aur face glow ke liye best hain</p>
+    </div>
+    <div class="grid-4 reveal">
+      <div class="food-card">
+        <div class="food-emoji">🥚</div>
+        <h4>Ande (Eggs)</h4>
+        <p>Complete protein + Selenium + Vitamin D</p>
+        <span class="benefit">Sperm Quality ↑</span>
+      </div>
+      <div class="food-card">
+        <div class="food-emoji">🥜</div>
+        <h4>Akhrot</h4>
+        <p>Omega-3 fatty acids — sperm motility behtar kare</p>
+        <span class="benefit">Motility ↑</span>
+      </div>
+      <div class="food-card">
+        <div class="food-emoji">🥬</div>
+        <h4>Palak</h4>
+        <p>Folic acid — sperm count badhaye, DNA repair</p>
+        <span class="benefit">Count ↑</span>
+      </div>
+      <div class="food-card">
+        <div class="food-emoji">🍫</div>
+        <h4>Dark Chocolate</h4>
+        <p>L-arginine — sperm count aur volume badhaye</p>
+        <span class="benefit">Volume ↑</span>
+      </div>
+      <div class="food-card">
+        <div class="food-emoji">🧄</div>
+        <h4>Lahsun</h4>
+        <p>Blood flow behtar kare, testosterone support</p>
+        <span class="benefit">Blood Flow ↑</span>
+      </div>
+      <div class="food-card">
+        <div class="food-emoji">🍌</div>
+        <h4>Kela</h4>
+        <p>Potassium + Vitamin B6 — energy recovery</p>
+        <span class="benefit">Energy ↑</span>
+      </div>
+      <div class="food-card">
+        <div class="food-emoji">🍅</div>
+        <h4>Tamatar</h4>
+        <p>Lycopene — sperm concentration badhaye</p>
+        <span class="benefit">Concentration ↑</span>
+      </div>
+      <div class="food-card">
+        <div class="food-emoji">🫐</div>
+        <h4>Blueberries</h4>
+        <p>Antioxidants — sperm DNA protect kare</p>
+        <span class="benefit">DNA Protection</span>
+      </div>
+      <div class="food-card">
+        <div class="food-emoji">🎃</div>
+        <h4>Kaddoo ke Beej</h4>
+        <p>Zinc se bhari — daily zinc ki kami poori kare</p>
+        <span class="benefit">Zinc Rich</span>
+      </div>
+      <div class="food-card">
+        <div class="food-emoji">🥦</div>
+        <h4>Broccoli</h4>
+        <p>Vitamin C + Folic acid — double benefit</p>
+        <span class="benefit">Vitamin C ↑</span>
+      </div>
+      <div class="food-card">
+        <div class="food-emoji">🐟</div>
+        <h4>Machli (Fish)</h4>
+        <p>Omega-3 + Protein — best food for men</p>
+        <span class="benefit">Best Overall</span>
+      </div>
+      <div class="food-card">
+        <div class="food-emoji">🍯</div>
+        <h4>Shahad (Honey)</h4>
+        <p>Natural energy + antibacterial + skin glow</p>
+        <span class="benefit">Glow + Energy</span>
+      </div>
+    </div>
+
+    <!-- Ayurvedic Section -->
+    <div style="margin-top:3rem;" class="reveal">
+      <div class="section-title">
+        <div class="tag" style="background:linear-gradient(135deg,var(--amber),var(--gold))">Ayurveda</div>
+        <h2>Ayurvedic Herbs — Traditional Power</h2>
+      </div>
+      <div class="grid-3">
+        <div class="card" style="border-top:4px solid var(--emerald)">
+          <div style="font-size:2.5rem;margin-bottom:0.5rem;">🌿</div>
+          <h4 style="font-family:'Baloo 2';color:var(--forest);font-size:1.1rem;">Ashwagandha</h4>
+          <p style="font-size:0.88rem;color:var(--muted);margin-top:0.4rem;">Testosterone badhata hai, stress kam karta hai, sperm count 167% tak improve karta hai (studies ke anusaar). Raat ko dudh mein lein.</p>
+        </div>
+        <div class="card" style="border-top:4px solid var(--amber)">
+          <div style="font-size:2.5rem;margin-bottom:0.5rem;">🍂</div>
+          <h4 style="font-family:'Baloo 2';color:var(--forest);font-size:1.1rem;">Shatavari</h4>
+          <p style="font-size:0.88rem;color:var(--muted);margin-top:0.4rem;">Sexual vitality badhata hai, hormones balance karta hai, stamina improve karta hai. Subah dudh ke saath lein.</p>
+        </div>
+        <div class="card" style="border-top:4px solid var(--coral)">
+          <div style="font-size:2.5rem;margin-bottom:0.5rem;">⚫</div>
+          <h4 style="font-family:'Baloo 2';color:var(--forest);font-size:1.1rem;">Shilajit</h4>
+          <p style="font-size:0.88rem;color:var(--muted);margin-top:0.4rem;">60+ minerals, testosterone boost, energy aur stamina ke liye best. Pure shilajit lein, doctor se consult karein.</p>
+        </div>
+        <div class="card" style="border-top:4px solid var(--sky)">
+          <div style="font-size:2.5rem;margin-bottom:0.5rem;">🌸</div>
+          <h4 style="font-family:'Baloo 2';color:var(--forest);font-size:1.1rem;">Safed Musli</h4>
+          <p style="font-size:0.88rem;color:var(--muted);margin-top:0.4rem;">Sperm count aur motility ke liye, weakness door kare, body ko strengthen kare.</p>
+        </div>
+        <div class="card" style="border-top:4px solid var(--lavender)">
+          <div style="font-size:2.5rem;margin-bottom:0.5rem;">🌱</div>
+          <h4 style="font-family:'Baloo 2';color:var(--forest);font-size:1.1rem;">Kapikacchu (Kaunch Beej)</h4>
+          <p style="font-size:0.88rem;color:var(--muted);margin-top:0.4rem;">Dopamine badhata hai, testosterone improve karta hai, sexual performance ke liye</p>
+        </div>
+        <div class="card" style="border-top:4px solid var(--gold)">
+          <div style="font-size:2.5rem;margin-bottom:0.5rem;">💛</div>
+          <h4 style="font-family:'Baloo 2';color:var(--forest);font-size:1.1rem;">Haldi (Turmeric)</h4>
+          <p style="font-size:0.88rem;color:var(--muted);margin-top:0.4rem;">Anti-inflammatory, skin glow, immunity boost. Raat ko dudh mein lein — Golden Milk</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 5: EXERCISE -->
+<section class="section" id="exercise">
+  <div class="container">
+    <div class="section-title reveal">
+      <div class="tag">Section 05</div>
+      <h2>Exercise Plan</h2>
+      <p>Sex ke baad aur roz ki exercise — complete guide</p>
+    </div>
+    <div class="grid-2 reveal">
+      <div>
+        <h3 style="font-family:'Baloo 2';color:var(--forest);margin-bottom:1.2rem;font-size:1.15rem;">🔥 Core Exercises for Sexual Health</h3>
+        <div style="display:flex;flex-direction:column;gap:1rem;">
+          <div class="exercise-card">
+            <div class="ex-icon">🧘</div>
+            <div>
+              <h4>Kegel Exercise</h4>
+              <div class="sets">10 reps × 3 sets | Roz subah</div>
+              <p>Pelvic floor muscles mazboot kare, sexual performance behtar kare, bladder control</p>
+            </div>
+          </div>
+          <div class="exercise-card" style="border-left-color:var(--amber)">
+            <div class="ex-icon">🏋️</div>
+            <div>
+              <h4>Squats</h4>
+              <div class="sets">3 sets × 15 reps | Roz</div>
+              <p>Testosterone 30% tak boost hota hai, lower body strength, pelvic strength</p>
+            </div>
+          </div>
+          <div class="exercise-card" style="border-left-color:var(--sky)">
+            <div class="ex-icon">💪</div>
+            <div>
+              <h4>Push-ups</h4>
+              <div class="sets">3 sets × 15 reps | Roz</div>
+              <p>Upper body strength, blood circulation behtar, testosterone boost</p>
+            </div>
+          </div>
+          <div class="exercise-card" style="border-left-color:var(--lavender)">
+            <div class="ex-icon">🛡️</div>
+            <div>
+              <h4>Plank</h4>
+              <div class="sets">30–60 seconds × 3 sets | Roz</div>
+              <p>Core strength, back pain se rahat, posture improve</p>
+            </div>
+          </div>
+          <div class="exercise-card" style="border-left-color:var(--coral)">
+            <div class="ex-icon">🦵</div>
+            <div>
+              <h4>Hip Thrusts</h4>
+              <div class="sets">3 sets × 12 reps | Hafte mein 3 baar</div>
+              <p>Pelvic muscles strong, sexual performance directly improve</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <h3 style="font-family:'Baloo 2';color:var(--forest);margin-bottom:1.2rem;font-size:1.15rem;">🌬️ Daily Wellness Activities</h3>
+        <div style="display:flex;flex-direction:column;gap:1rem;">
+          <div class="exercise-card" style="border-left-color:var(--mint)">
+            <div class="ex-icon">🚶</div>
+            <div>
+              <h4>Walking (Tez Chal)</h4>
+              <div class="sets">30 min roz | Subah ya shaam</div>
+              <p>Blood circulation, fresh oxygen, mental health, testosterone maintain</p>
+            </div>
+          </div>
+          <div class="exercise-card" style="border-left-color:var(--gold)">
+            <div class="ex-icon">🧘</div>
+            <div>
+              <h4>Pranayama / Deep Breathing</h4>
+              <div class="sets">10–15 min roz | Subah khali pet</div>
+              <p>Anulom vilom, kapalbhati — oxygen badhaye, stress kam kare</p>
+            </div>
+          </div>
+          <div class="exercise-card" style="border-left-color:var(--emerald)">
+            <div class="ex-icon">🤸</div>
+            <div>
+              <h4>Stretching</h4>
+              <div class="sets">10 min roz | Sone se pehle</div>
+              <p>Muscles relax, flexibility, achi neend ke liye</p>
+            </div>
+          </div>
+          <div class="exercise-card" style="border-left-color:var(--coral)">
+            <div class="ex-icon">🏃</div>
+            <div>
+              <h4>Jogging / Running</h4>
+              <div class="sets">20–30 min | Hafte mein 3–4 baar</div>
+              <p>Cardiovascular health, energy, mood improve, weight control</p>
+            </div>
+          </div>
+          <div class="exercise-card" style="border-left-color:var(--lavender)">
+            <div class="ex-icon">🧗</div>
+            <div>
+              <h4>Deadlift</h4>
+              <div class="sets">3 sets × 8 reps | Hafte mein 2 baar</div>
+              <p>Testosterone sabse zyaada badhane wali exercise</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Kegel Detail -->
+    <div style="margin-top:2.5rem;" class="reveal">
+      <div class="card" style="background:linear-gradient(135deg,#e8f5e9,#f1f8e9);border:2px solid var(--mint)">
+        <h3 style="font-family:'Baloo 2';color:var(--forest);font-size:1.2rem;margin-bottom:1rem;">🎯 Kegel Exercise — Sahi Tarika</h3>
+        <div class="grid-3">
+          <div style="background:white;border-radius:12px;padding:1.2rem;text-align:center;">
+            <div style="font-size:2rem;margin-bottom:0.4rem;">1️⃣</div>
+            <h4 style="font-size:0.9rem;color:var(--forest);">Muscles Dhundho</h4>
+            <p style="font-size:0.82rem;color:var(--muted);">Peshaab rokne ki koshish karo — jo muscles use hon, wahi kegel muscles hain</p>
+          </div>
+          <div style="background:white;border-radius:12px;padding:1.2rem;text-align:center;">
+            <div style="font-size:2rem;margin-bottom:0.4rem;">2️⃣</div>
+            <h4 style="font-size:0.9rem;color:var(--forest);">Contract Karo</h4>
+            <p style="font-size:0.82rem;color:var(--muted);">Un muscles ko 5 second tak rok ke rakho, phir 5 second relax karo</p>
+          </div>
+          <div style="background:white;border-radius:12px;padding:1.2rem;text-align:center;">
+            <div style="font-size:2rem;margin-bottom:0.4rem;">3️⃣</div>
+            <h4 style="font-size:0.9rem;color:var(--forest);">Repeat Karo</h4>
+            <p style="font-size:0.82rem;color:var(--muted);">10 baar karo, din mein 3 baar. 4–6 hafte mein farak dikhega</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 6: FACE CARE -->
+<section class="section section-alt" id="face">
+  <div class="container">
+    <div class="section-title reveal">
+      <div class="tag">Section 06</div>
+      <h2>Face Recovery & Glow</h2>
+      <p>Glowing skin ke liye complete routine — subah se raat tak</p>
+    </div>
+
+    <div class="grid-2 reveal" style="margin-bottom:2.5rem;">
+      <!-- Morning Routine -->
+      <div class="card">
+        <h3 style="font-family:'Baloo 2';color:var(--amber);font-size:1.15rem;margin-bottom:1.2rem;">🌅 Subah Ki Routine</h3>
+        <div style="display:flex;flex-direction:column;gap:0.8rem;">
+          <div class="step-card">
+            <div class="step-num">1</div>
+            <h4>Paani Piyein (Uthte Hi)</h4>
+            <p>2 gilaas gunguna paani + nimbu + shahad. Skin andar se hydrate hoti hai</p>
+          </div>
+          <div class="step-card">
+            <div class="step-num" style="background:linear-gradient(135deg,var(--amber),var(--gold))">2</div>
+            <h4>Face Wash</h4>
+            <p>Thande paani se mooh dhoyein. Gentle face wash use karein — baar baar na dhoyein</p>
+          </div>
+          <div class="step-card">
+            <div class="step-num" style="background:linear-gradient(135deg,var(--emerald),var(--mint))">3</div>
+            <h4>Aloe Vera Gel</h4>
+            <p>Fresh aloe vera ya packaged gel — chehre par 20 min lagayein, phir dhoyein. Roz karein</p>
+          </div>
+          <div class="step-card">
+            <div class="step-num" style="background:linear-gradient(135deg,var(--sky),#1a5276)">4</div>
+            <h4>Moisturizer + Sunscreen</h4>
+            <p>Light moisturizer lagayein. Bahar nikalne se pehle SPF 30+ sunscreen zaroor lagayein</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Night Routine -->
+      <div class="card">
+        <h3 style="font-family:'Baloo 2';color:var(--lavender);font-size:1.15rem;margin-bottom:1.2rem;">🌙 Raat Ki Routine</h3>
+        <div style="display:flex;flex-direction:column;gap:0.8rem;">
+          <div class="step-card" style="border-left:4px solid var(--lavender)">
+            <div class="step-num" style="background:linear-gradient(135deg,var(--lavender),#6c3483)">1</div>
+            <h4>Face Achhe Se Dhoyein</h4>
+            <p>Din bhar ki dhool aur oil saaf karein. Gentle cleanser use karein</p>
+          </div>
+          <div class="step-card" style="border-left:4px solid var(--lavender)">
+            <div class="step-num" style="background:linear-gradient(135deg,var(--lavender),#6c3483)">2</div>
+            <h4>Aloe Vera ya Coconut Oil</h4>
+            <p>Halka sa lagayein — raat bhar kaam karta hai, subah fresh skin milegi</p>
+          </div>
+          <div class="step-card" style="border-left:4px solid var(--lavender)">
+            <div class="step-num" style="background:linear-gradient(135deg,var(--lavender),#6c3483)">3</div>
+            <h4>Golden Milk Piyein</h4>
+            <p>Haldi waala dudh — skin se andar tak repair, anti-inflammatory</p>
+          </div>
+          <div class="step-card" style="border-left:4px solid var(--lavender)">
+            <div class="step-num" style="background:linear-gradient(135deg,var(--lavender),#6c3483)">4</div>
+            <h4>10–11 Baje Tak Soyein</h4>
+            <p>Neend mein skin repair hoti hai — yahi sabse bada secret hai glowing skin ka</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Face Masks -->
+    <div class="reveal">
+      <div class="section-title">
+        <div class="tag" style="background:linear-gradient(135deg,#8e44ad,var(--lavender))">Gharelu Nuskhe</div>
+        <h2>Face Masks — 100% Natural</h2>
+      </div>
+      <div class="grid-3">
+        <div class="card" style="text-align:center;border-top:4px solid var(--mint)">
+          <div style="font-size:3rem;margin-bottom:0.5rem;">🌵</div>
+          <h4 style="font-family:'Baloo 2';color:var(--forest);">Aloe Vera Mask</h4>
+          <p style="font-size:0.85rem;color:var(--muted);margin-top:0.4rem;">Fresh aloe vera gel chehra par lagayein, 20 min baad dhoyein. Roz karein — best face mask</p>
+          <div style="margin-top:0.7rem;font-size:0.78rem;background:var(--warm);border-radius:8px;padding:0.5rem;color:var(--emerald);font-weight:600;">⏰ Roz | Best for Glow</div>
+        </div>
+        <div class="card" style="text-align:center;border-top:4px solid var(--amber)">
+          <div style="font-size:3rem;margin-bottom:0.5rem;">🫙</div>
+          <h4 style="font-family:'Baloo 2';color:var(--forest);">Besan + Dahi + Haldi</h4>
+          <p style="font-size:0.85rem;color:var(--muted);margin-top:0.4rem;">2 chammach besan + 1 chammach dahi + chutki haldi. Milayen, 15–20 min lagayein, dhoyein</p>
+          <div style="margin-top:0.7rem;font-size:0.78rem;background:var(--warm);border-radius:8px;padding:0.5rem;color:var(--amber);font-weight:600;">⏰ Hafte mein 2 baar | Brightening</div>
+        </div>
+        <div class="card" style="text-align:center;border-top:4px solid var(--gold)">
+          <div style="font-size:3rem;margin-bottom:0.5rem;">🍯</div>
+          <h4 style="font-family:'Baloo 2';color:var(--forest);">Honey + Nimbu Mask</h4>
+          <p style="font-size:0.85rem;color:var(--muted);margin-top:0.4rem;">1 chammach shahad + kuch boond nimbu. 15 min lagayein. Glow aur dark spots ke liye</p>
+          <div style="margin-top:0.7rem;font-size:0.78rem;background:var(--warm);border-radius:8px;padding:0.5rem;color:var(--gold);font-weight:600;">⏰ Hafte mein 2 baar | Dark Spots</div>
+        </div>
+        <div class="card" style="text-align:center;border-top:4px solid var(--sky)">
+          <div style="font-size:3rem;margin-bottom:0.5rem;">🧊</div>
+          <h4 style="font-family:'Baloo 2';color:var(--forest);">Ice Cube Therapy</h4>
+          <p style="font-size:0.85rem;color:var(--muted);margin-top:0.4rem;">Subah uthkar face par ice cube lagayein — pores tight, swelling kam, freshness instant</p>
+          <div style="margin-top:0.7rem;font-size:0.78rem;background:var(--warm);border-radius:8px;padding:0.5rem;color:var(--sky);font-weight:600;">⏰ Roz subah | Instant Freshness</div>
+        </div>
+        <div class="card" style="text-align:center;border-top:4px solid var(--emerald)">
+          <div style="font-size:3rem;margin-bottom:0.5rem;">🥒</div>
+          <h4 style="font-family:'Baloo 2';color:var(--forest);">Cucumber Slice</h4>
+          <p style="font-size:0.85rem;color:var(--muted);margin-top:0.4rem;">Thandi kheera ki slices aankhon aur face par rakho — puffiness aur dark circles door</p>
+          <div style="margin-top:0.7rem;font-size:0.78rem;background:var(--warm);border-radius:8px;padding:0.5rem;color:var(--emerald);font-weight:600;">⏰ Roz | Dark Circles</div>
+        </div>
+        <div class="card" style="text-align:center;border-top:4px solid var(--coral)">
+          <div style="font-size:3rem;margin-bottom:0.5rem;">🍵</div>
+          <h4 style="font-family:'Baloo 2';color:var(--forest);">Green Tea Toner</h4>
+          <p style="font-size:0.85rem;color:var(--muted);margin-top:0.4rem;">Green tea thandi karke cotton se face par lagao — antioxidants, anti-aging, glow</p>
+          <div style="margin-top:0.7rem;font-size:0.78rem;background:var(--warm);border-radius:8px;padding:0.5rem;color:var(--coral);font-weight:600;">⏰ Hafte mein 3 baar | Anti-aging</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 7: DRINKS -->
+<section class="section" id="drinks">
+  <div class="container">
+    <div class="section-title reveal">
+      <div class="tag">Section 07</div>
+      <h2>Skin Glow Drinks</h2>
+      <p>Andar se glow — ye peeyein roz</p>
+    </div>
+    <div class="grid-4 reveal">
+      <div class="drink-card">
+        <div class="drink-icon">🍋</div>
+        <h4>Nimbu Shahad Paani</h4>
+        <div class="timing">Subah khali pet</div>
+        <p>Vitamin C + detox + skin glow, immunity boost</p>
+      </div>
+      <div class="drink-card">
+        <div class="drink-icon">🥥</div>
+        <h4>Naariyal Paani</h4>
+        <div class="timing">Din mein kabhi bhi</div>
+        <p>Electrolytes, hydration, skin hydrate, energy</p>
+      </div>
+      <div class="drink-card">
+        <div class="drink-icon">🌿</div>
+        <h4>Aloe Vera Juice</h4>
+        <div class="timing">Subah khali pet</div>
+        <p>Skin se andar tak repair, digestion achha, glow</p>
+      </div>
+      <div class="drink-card">
+        <div class="drink-icon">🍵</div>
+        <h4>Green Tea</h4>
+        <div class="timing">Subah ya shaam</div>
+        <p>Antioxidants, fat burn, skin anti-aging</p>
+      </div>
+      <div class="drink-card">
+        <div class="drink-icon">🥛</div>
+        <h4>Haldi Waala Dudh</h4>
+        <div class="timing">Raat sone se pehle</div>
+        <p>Anti-inflammatory, recovery, skin glow, neend</p>
+      </div>
+      <div class="drink-card">
+        <div class="drink-icon">🍹</div>
+        <h4>Amla Juice</h4>
+        <div class="timing">Subah khali pet</div>
+        <p>Vitamin C highest source, collagen boost, glow</p>
+      </div>
+      <div class="drink-card">
+        <div class="drink-icon">🫚</div>
+        <h4>Kachi Haldi Paani</h4>
+        <div class="timing">Subah</div>
+        <p>Curcumin — powerful anti-inflammatory, skin tone</p>
+      </div>
+      <div class="drink-card">
+        <div class="drink-icon">💦</div>
+        <h4>Saada Paani</h4>
+        <div class="timing">8–10 gilaas roz</div>
+        <p>Sabse zaroori — skin ka 70% hydration paani se</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 8: MYTHS vs FACTS -->
+<section class="section section-alt" id="myths">
+  <div class="container">
+    <div class="section-title reveal">
+      <div class="tag">Section 08</div>
+      <h2>Myths vs Facts</h2>
+      <p>Jo suna hai usme se kya sach hai, kya jhooth?</p>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:1.2rem;" class="reveal">
+
+      <div class="myth-fact">
+        <div class="myth-side">
+          <h4>❌ MYTH: Face kala pad jaata hai</h4>
+          <p>Masturbation se chehra kala nahi hota. Yeh sirf ek aam galat dharna hai.</p>
+        </div>
+        <div class="fact-side">
+          <h4>✅ FACT: Face dull hone ke asli kaaraN</h4>
+          <p>Neend ki kami, paani kam peena, junk food, sun damage, stress — yeh hain asli kaaraN. Masturbation ka face colour se koi sambandh nahi.</p>
+        </div>
+      </div>
+
+      <div class="myth-fact">
+        <div class="myth-side">
+          <h4>❌ MYTH: Roz karne se kamzori aati hai</h4>
+          <p>Bahut log mante hain ki masturbation se body weak ho jaati hai.</p>
+        </div>
+        <div class="fact-side">
+          <h4>✅ FACT: Moderate masturbation safe hai</h4>
+          <p>Hafte mein 2–4 baar bilkul normal hai. Isse stress kam hota hai, neend achhi aati hai. Kamzori ka kaaraN poor diet aur exercise ki kami hai.</p>
+        </div>
+      </div>
+
+      <div class="myth-fact">
+        <div class="myth-side">
+          <h4>❌ MYTH: Virya naaash se shakti khatam hoti hai</h4>
+          <p>Purani Indian theory mein "veerya rakshaaN" ko bahut importance di jaati thi.</p>
+        </div>
+        <div class="fact-side">
+          <h4>✅ FACT: Body khud naya banaati hai</h4>
+          <p>Ek ejaculation mein sirf 0.1% zinc daily requirement ka kharach hota hai. 1 anda khaane se kami poori. Body roz 10–20 crore naye sperm banaati hai.</p>
+        </div>
+      </div>
+
+      <div class="myth-fact">
+        <div class="myth-side">
+          <h4>❌ MYTH: Masturbation se height rukti hai</h4>
+          <p>Yeh bhi ek popular myth hai jo log mante hain.</p>
+        </div>
+        <div class="fact-side">
+          <h4>✅ FACT: Height genetics + nutrition par depend hai</h4>
+          <p>Height Growth hormone (HGH) par depend karti hai jiska masturbation se koi lena dena nahi. Proper sleep aur nutrition se height badhti hai.</p>
+        </div>
+      </div>
+
+      <div class="myth-fact">
+        <div class="myth-side">
+          <h4>❌ MYTH: Memory aur concentration kharab hoti hai</h4>
+          <p>Bahut log kehte hain ki masturbation se dimag kamzor hota hai.</p>
+        </div>
+        <div class="fact-side">
+          <h4>✅ FACT: Guilt aur anxiety se hota hai problem</h4>
+          <p>Masturbation directly brain ko damage nahi karta. Par guilt, shame aur anxiety — yeh mental health ko affect karte hain. Healthy attitude rakhein.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- DO DONT -->
+<section class="section" id="dodont">
+  <div class="container">
+    <div class="section-title reveal">
+      <div class="tag">Section 09</div>
+      <h2>Kya Karein / Kya Na Karein</h2>
+      <p>Simple rules — bada fark</p>
+    </div>
+    <div class="do-dont-grid reveal">
+      <div class="do-list">
+        <div class="list-header">✅ ZAROOR KAREIN (Do's)</div>
+        <ul class="list-body">
+          <li>Roz 8–10 gilaas paani piyein</li>
+          <li>7–8 ghante ki gehri neend lein</li>
+          <li>Roz 30 min exercise karein</li>
+          <li>Fruits khayein — papaya, santra, aamla</li>
+          <li>Subah nimbu paani + shahad lein</li>
+          <li>Hafte mein 2–3 baar balance rakhein</li>
+          <li>Aloe vera roz face par lagayein</li>
+          <li>Sunscreen roz lagayein (SPF 30+)</li>
+          <li>Stress manage karein — yoga, meditation</li>
+          <li>Ashwagandha raat ko dudh mein lein</li>
+          <li>Kegel exercise roz karein</li>
+          <li>Protein se bhara nashta karein</li>
+        </ul>
+      </div>
+      <div class="dont-list">
+        <div class="list-header">❌ BILKUL NA KAREIN (Don'ts)</div>
+        <ul class="list-body">
+          <li>Cold drinks / soda bilkul band karein</li>
+          <li>Raat ko 12 baje ke baad mat jaago</li>
+          <li>Smoking — sperm quality 22% kam karta hai</li>
+          <li>Alcohol — testosterone directly girata hai</li>
+          <li>Zyaada oily / junk food se bachein</li>
+          <li>Din mein baar baar masturbation (3–4+)</li>
+          <li>Screen time raat ko zyaada na karein</li>
+          <li>Guilt feel mat karo — natural hai</li>
+          <li>Laptop seedha god mein mat rakho</li>
+          <li>Zyaada garam paani mein mat baithein</li>
+          <li>Tight underwear avoid karein</li>
+          <li>Stress mat lo — cortisol sperm killer hai</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SUPPLEMENTS -->
+<section class="section section-alt" id="supplements">
+  <div class="container">
+    <div class="section-title reveal">
+      <div class="tag">Section 10</div>
+      <h2>Supplements Guide</h2>
+      <p>Doctor se poochh kar lein — yeh safe hain</p>
+    </div>
+    <div class="grid-4 reveal">
+      <div class="supp-card" style="border-bottom-color:var(--mint)">
+        <div class="supp-icon">⚡</div>
+        <h4>Zinc</h4>
+        <span class="dose" style="background:var(--emerald)">11mg daily</span>
+        <p>Sperm health, immunity, testosterone ke liye</p>
+      </div>
+      <div class="supp-card" style="border-bottom-color:var(--gold)">
+        <div class="supp-icon">☀️</div>
+        <h4>Vitamin D3</h4>
+        <span class="dose" style="background:var(--gold)">2000 IU daily</span>
+        <p>Testosterone, bone health, immunity boost</p>
+      </div>
+      <div class="supp-card" style="border-bottom-color:var(--amber)">
+        <div class="supp-icon">🐟</div>
+        <h4>Omega-3</h4>
+        <span class="dose" style="background:var(--amber)">1000mg daily</span>
+        <p>Sperm motility, heart health, brain function</p>
+      </div>
+      <div class="supp-card" style="border-bottom-color:var(--lavender)">
+        <div class="supp-icon">🌿</div>
+        <h4>Magnesium</h4>
+        <span class="dose" style="background:var(--lavender)">400mg daily</span>
+        <p>Neend behtar, muscle recovery, testosterone</p>
+      </div>
+      <div class="supp-card" style="border-bottom-color:var(--sky)">
+        <div class="supp-icon">🔬</div>
+        <h4>Selenium</h4>
+        <span class="dose" style="background:var(--sky)">55mcg daily</span>
+        <p>Antioxidant, sperm quality, thyroid health</p>
+      </div>
+      <div class="supp-card" style="border-bottom-color:var(--coral)">
+        <div class="supp-icon">💊</div>
+        <h4>Vitamin C</h4>
+        <span class="dose" style="background:var(--coral)">500mg daily</span>
+        <p>Antioxidant, immunity, collagen for skin</p>
+      </div>
+      <div class="supp-card" style="border-bottom-color:var(--emerald)">
+        <div class="supp-icon">🧬</div>
+        <h4>CoQ10</h4>
+        <span class="dose" style="background:var(--emerald)">200mg daily</span>
+        <p>Mitochondria energy, sperm motility, anti-aging</p>
+      </div>
+      <div class="supp-card" style="border-bottom-color:var(--gold)">
+        <div class="supp-icon">🌑</div>
+        <h4>Shilajit</h4>
+        <span class="dose" style="background:var(--gold)">As directed</span>
+        <p>60+ minerals, testosterone, energy, vitality</p>
+      </div>
+    </div>
+    <p style="text-align:center;color:var(--muted);font-size:0.85rem;margin-top:1.5rem;">⚠️ Koi bhi supplement lene se pehle doctor ya nutritionist se ek baar zaroor milein</p>
+  </div>
+</section>
+
+<!-- DAILY ROUTINE -->
+<section class="section" id="routine">
+  <div class="container">
+    <div class="section-title reveal">
+      <div class="tag">Section 11</div>
+      <h2>Complete Daily Routine</h2>
+      <p>Subah se raat tak — ek perfect din</p>
+    </div>
+    <div class="reveal">
+      <div class="routine-block">
+        <div class="routine-time" style="background:linear-gradient(135deg,#f39c12,#e67e22)">
+          <span>🌅</span> 6:00 – 7:00 AM — Subah Uthna
+        </div>
+        <div class="routine-content">
+          <span class="routine-tag">💧 2 gilaas paani</span>
+          <span class="routine-tag">🍋 Nimbu + Shahad</span>
+          <span class="routine-tag">🚿 Fresh ho jaayein</span>
+          <span class="routine-tag">🧊 Ice cube face par</span>
+        </div>
+      </div>
+      <div class="routine-block">
+        <div class="routine-time" style="background:linear-gradient(135deg,#27ae60,#1e8449)">
+          <span>🏃</span> 7:00 – 8:00 AM — Exercise Time
+        </div>
+        <div class="routine-content">
+          <span class="routine-tag">🧘 Pranayama 10 min</span>
+          <span class="routine-tag">🚶 Walking 20 min</span>
+          <span class="routine-tag">💪 Kegel + Squats</span>
+          <span class="routine-tag">🤸 Stretching</span>
+        </div>
+      </div>
+      <div class="routine-block">
+        <div class="routine-time" style="background:linear-gradient(135deg,#e74c3c,#c0392b)">
+          <span>🍳</span> 8:00 – 9:00 AM — Nashta + Face Routine
+        </div>
+        <div class="routine-content">
+          <span class="routine-tag">🥚 Ande + Badam</span>
+          <span class="routine-tag">🥛 Dudh + Ashwagandha</span>
+          <span class="routine-tag">🌵 Aloe Vera face mask</span>
+          <span class="routine-tag">☀️ Sunscreen lagayein</span>
+        </div>
+      </div>
+      <div class="routine-block">
+        <div class="routine-time" style="background:linear-gradient(135deg,#2980b9,#1a5276)">
+          <span>🍱</span> 1:00 – 2:00 PM — Lunch
+        </div>
+        <div class="routine-content">
+          <span class="routine-tag">🍛 Dal + Roti + Chawal</span>
+          <span class="routine-tag">🥬 Hari sabzi</span>
+          <span class="routine-tag">🥛 Dahi</span>
+          <span class="routine-tag">💧 2 gilaas paani</span>
+        </div>
+      </div>
+      <div class="routine-block">
+        <div class="routine-time" style="background:linear-gradient(135deg,#8e44ad,#6c3483)">
+          <span>🌇</span> 5:00 – 6:00 PM — Shaam
+        </div>
+        <div class="routine-content">
+          <span class="routine-tag">🥜 Mixed nuts</span>
+          <span class="routine-tag">🥥 Naariyal paani</span>
+          <span class="routine-tag">🚶 Evening walk</span>
+          <span class="routine-tag">🍵 Green tea</span>
+        </div>
+      </div>
+      <div class="routine-block">
+        <div class="routine-time" style="background:linear-gradient(135deg,#1abc9c,#148f77)">
+          <span>🌙</span> 8:00 – 10:00 PM — Raat + Neend
+        </div>
+        <div class="routine-content">
+          <span class="routine-tag">🍛 Halka khaana</span>
+          <span class="routine-tag">🧴 Night face routine</span>
+          <span class="routine-tag">🥛 Haldi dudh</span>
+          <span class="routine-tag">📵 Phone band</span>
+          <span class="routine-tag">😴 10-11 baje tak soyein</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- SECTION: LONG FORM KNOWLEDGE HUB -->
+<section class="section" id="knowledge-hub">
+  <div class="container">
+    <div class="section-title reveal">
+      <div class="tag">SEO Knowledge Hub</div>
+      <h2>Complete Sexual Wellness Knowledge Hub (Hindi)</h2>
+      <p>Search-friendly long-form content jo public users ko practical aur responsible health information deta hai.</p>
+    </div>
+
+    <div class="card reveal" style="line-height:1.9;">
+      <p style="font-size:0.95rem;color:var(--muted);">Yeh section specially is tarah likha gaya hai ki user jab Google par "sexual health in Hindi", "masturbation myths", "sperm recovery diet", "men skin glow routine", "testosterone lifestyle tips", "kegel exercise guide", "when to see urologist", "male fertility natural support", ya "night routine for better recovery" jaise queries search kare, to unhe clear, practical aur balanced guidance mile. Sexual health ko sirf ek topic na samjhein; yeh sleep quality, stress level, hydration, hormonal balance, physical activity, nutrition quality, relationship behavior, aur mental wellness ka combined result hota hai. Isi wajah se is website mein meal timing, hydration plan, micronutrient support, exercise modules, breathing practices, myth-busting, and doctor consultation triggers ko ek hi roadmap mein organize kiya gaya hai.</p>
+      <p style="font-size:0.95rem;color:var(--muted);margin-top:1rem;">Agar aapko fatigue, low mood, concentration issues, ya self-confidence drop feel ho raha hai, to pehla step panic nahi balki routine audit hona chahiye. Har din ke 24 ghante mein aapka recovery system teen jagah win ya lose karta hai: (1) sleep window, (2) food quality, (3) stress response. Is guide ka core principle hai: "consistency over intensity." 2 din ka extreme diet ya 1 hafte ka heavy workout usually sustainable nahi hota, lekin daily 30-minute movement, protein-rich breakfast, and 7-8 hours sleep long-term hormonal health, sexual performance confidence, and skin quality ke liye zyada effective framework deta hai.</p>
+      <p style="font-size:0.95rem;color:var(--muted);margin-top:1rem;">Digital behavior bhi sexual wellbeing ka major factor hai. Excessive scrolling, late-night screen exposure, and compulsive content consumption dopamine dysregulation create kar sakte hain jisse motivation, focus, aur sleep architecture affect hota hai. Isi liye healthy digital hygiene rules add kiye gaye hain: fixed usage slots, no-screen bedtime buffer, and replacement actions like walking, journaling, hydration break, and breathwork. Yeh simple interventions urge intensity ko reduce karte hain aur self-control ko improve karte hain.</p>
+      <p style="font-size:0.95rem;color:var(--muted);margin-top:1rem;">Public awareness ke liye ek aur important point: myths se zyada damage kabhi-kabhi guilt karta hai. Myths jaise "masturbation se body permanently weak hoti hai" ya "height ruk jaati hai" scientific support ke bina fear create karte hain. Real health outcomes diet deficiency, sleep debt, stress overload, sedentariness, smoking, excessive alcohol, and untreated medical conditions par depend karte hain. Agar symptoms persistent hain—jaise pain, burning urination, semen abnormality, severe anxiety, erectile dysfunction over months—tab self-treatment delay karne ke bajay professional consultation best step hai.</p>
+      <p style="font-size:0.95rem;color:var(--muted);margin-top:1rem;">Is website ka public benefit objective simple hai: shame kam karo, evidence-oriented routine follow karo, and timely help lo. Healthy lifestyle ka matlab perfection nahi; iska matlab reliable daily habits hai jo energy, confidence, recovery, and long-term reproductive health ko support karein. Consent, respect, safe relationships, and emotional maturity har sexual wellness framework ka foundation hain. Agar aap is page ko educational purpose se share kar rahe hain, to ensure karein ki readers ko responsible message mile: self-awareness + balanced routine + medical guidance when needed.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- FAQ -->
+<section class="section section-alt" id="faq">
+  <div class="container">
+    <div class="section-title reveal">
+      <div class="tag">Section 12</div>
+      <h2>Aksar Pooche Jaane Waale Sawaal</h2>
+      <p>Aapke sabse common questions ke jawab</p>
+    </div>
+    <div style="max-width:800px;margin:0 auto;" class="reveal">
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false" aria-controls="faq-a-1">
+          Hafte mein kitni baar masturbation normal hai?
+          <span class="arrow" aria-hidden="true">▼</span>
+        </button>
+        <div class="faq-a" id="faq-a-1">
+          Hafte mein 2–4 baar bilkul normal aur healthy hai. Koi fixed number nahi hai — har insaan alag hota hai. Jab tak aap physically aur mentally theek feel kar rahe hain, koi baat nahi. Agar roz 3–4+ baar ho raha hai aur aap rok nahi pa rahe, tab doctor se milein.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false" aria-controls="faq-a-2">
+          Kya masturbation se testosterone kam hota hai?
+          <span class="arrow" aria-hidden="true">▼</span>
+        </button>
+        <div class="faq-a" id="faq-a-2">
+          Short-term mein thoda change ho sakta hai, lekin yeh normal range mein rehta hai aur jaldi wapas aa jaata hai. Studies mein paya gaya ki 7 din abstinence ke baad testosterone 145% tak badh sakta hai temporarily. Lekin regular moderate masturbation se long-term testosterone level par koi bura effect nahi hota.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false" aria-controls="faq-a-3">
+          Sex ke baad kitna paani peena chahiye?
+          <span class="arrow" aria-hidden="true">▼</span>
+        </button>
+        <div class="faq-a" id="faq-a-3">
+          Sex ke turant baad 2–3 gilaas paani peena chahiye. Yeh body ko rehydrate karta hai, electrolytes balance karta hai aur UTI (urinary tract infection) se bachata hai. Naariyal paani aur bhi better option hai kyunki ismein natural electrolytes hote hain.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false" aria-controls="faq-a-4">
+          Sperm count badhane ke liye kya karein?
+          <span class="arrow" aria-hidden="true">▼</span>
+        </button>
+        <div class="faq-a" id="faq-a-4">
+          Sperm count badhane ke liye: Zinc se bhare khaane (kaddoo ke beej, ande), Vitamin C (nimbu, amla), Folic acid (palak, methi), Ashwagandha (studies mein 167% sperm count increase), Omega-3 (akhrot, machli), regular exercise, stress management, aur zyaada garam cheezoin se bachein. Smoking aur alcohol sperm count significantly ghata dete hain.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false" aria-controls="faq-a-5">
+          Face glow ke liye sabse zaroori cheez kya hai?
+          <span class="arrow" aria-hidden="true">▼</span>
+        </button>
+        <div class="faq-a" id="faq-a-5">
+          Face glow ke liye andar se bahar — 3 sabse zaroori cheezein hain: (1) Paani — roz 8–10 gilaas, (2) Neend — 7–8 ghante, (3) Vitamin C waale fruits — aamla, nimbu, santra. Bahar se — Aloe vera roz lagao aur sunscreen zaroor use karo. Yeh 3 cheezein 4 hafte mein visible fark laa sakti hain.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false" aria-controls="faq-a-6">
+          Kya Ashwagandha safe hai? Kaise lein?
+          <span class="arrow" aria-hidden="true">▼</span>
+        </button>
+        <div class="faq-a" id="faq-a-6">
+          Haan, Ashwagandha generally safe hai. Dosage: 300–600mg daily, raat ko sone se pehle garam dudh mein. Isse testosterone badhta hai, stress kam hota hai, sperm count aur motility improve hoti hai. Pregnant women, thyroid patients aur kisi bhi serious condition mein pehle doctor se milein. 3 mahine tak regularly lene par best results milte hain.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false" aria-controls="faq-a-7">
+          Masturbation band karne se kya fayda hoga?
+          <span class="arrow" aria-hidden="true">▼</span>
+        </button>
+        <div class="faq-a" id="faq-a-7">
+          Agar aap moderate masturbation (hafte mein 2–3 baar) kar rahe hain toh band karne ki koi zaroorat nahi. Agar aap NoFap ya abstinence try karna chahte hain, toh benefits mein zyaada energy, better focus, aur real relationships mein improvement ho sakti hai. Lekin yeh scientifically proven nahi hai. Main benefit yeh hota hai ki time aur energy productive kamon mein use hoti hai.
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FINAL FORMULA -->
+<section class="section" style="padding:3rem 0;">
+  <div class="container">
+    <div class="reveal">
+      <div class="highlight-box">
+        <h3>🎯 Fresh & Glowing Rehne Ka Formula</h3>
+        <p>Sirf itna karo — 3 hafte mein fark dikhega!</p>
+        <div class="formula">
+          <div class="formula-item">😴 Achhi Neend</div>
+          <div class="formula-plus">+</div>
+          <div class="formula-item">💧 8 Gilaas Paani</div>
+          <div class="formula-plus">+</div>
+          <div class="formula-item">🥗 Accha Khaana</div>
+          <div class="formula-plus">+</div>
+          <div class="formula-item">🏃 Exercise</div>
+          <div class="formula-plus">+</div>
+          <div class="formula-item">🌵 Face Routine</div>
+          <div class="formula-plus">=</div>
+          <div class="formula-item" style="background:var(--lime);color:var(--forest);font-weight:700;">✨ Perfect You!</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- SECTION 13: MENTAL WELLBEING -->
+<section class="section section-alt" id="mind">
+  <div class="container">
+    <div class="section-title reveal">
+      <div class="tag">Section 13</div>
+      <h2>Mental Health & Digital Balance</h2>
+      <p>Healthy mind ke bina healthy body possible nahi — practical steps follow karein</p>
+    </div>
+
+    <div class="grid-3 reveal">
+      <div class="card" style="border-top:4px solid var(--lavender)">
+        <div class="card-icon" style="background:#f3ecff;color:var(--lavender)">🧠</div>
+        <h4 style="font-family:'Baloo 2';color:var(--forest);font-size:1.05rem;">Guilt-Free Understanding</h4>
+        <p style="font-size:0.88rem;color:var(--muted);margin-top:0.45rem;line-height:1.7;">Moderate masturbation ek normal biological behavior ho sakta hai. Excessive guilt anxiety ko badhata hai, jo mood aur confidence ko negatively impact karta hai.</p>
+      </div>
+
+      <div class="card" style="border-top:4px solid var(--sky)">
+        <div class="card-icon" style="background:#e8f4fb;color:var(--sky)">📵</div>
+        <h4 style="font-family:'Baloo 2';color:var(--forest);font-size:1.05rem;">Porn Hygiene Rules</h4>
+        <p style="font-size:0.88rem;color:var(--muted);margin-top:0.45rem;line-height:1.7;">Agar pornography use karte hain, to limits set karein: fixed time, no late-night binge, and no use during stress. Real relationships aur daily productivity ko priority dein.</p>
+      </div>
+
+      <div class="card" style="border-top:4px solid var(--mint)">
+        <div class="card-icon" style="background:#e9fbf0;color:var(--emerald)">🗓️</div>
+        <h4 style="font-family:'Baloo 2';color:var(--forest);font-size:1.05rem;">7-Day Reset Plan</h4>
+        <p style="font-size:0.88rem;color:var(--muted);margin-top:0.45rem;line-height:1.7;">1 week ke liye sleep fixed rakhein, 30-min workout daily karein, sugar reduce karein, aur phone-free morning start karein. Isse urge control aur energy dono improve hoti hain.</p>
+      </div>
+    </div>
+
+    <div style="margin-top:1.6rem;" class="reveal">
+      <div class="card" style="background:linear-gradient(135deg,#f9fff6,#effcf8);border:1px solid rgba(46,204,113,0.25)">
+        <h3 style="font-family:'Baloo 2';color:var(--forest);font-size:1.2rem;">🔁 Habit Replacement Formula</h3>
+        <p style="font-size:0.9rem;color:var(--muted);margin-top:0.4rem;">Urge aaye to direct willpower par depend mat karein — replacement action use karein:</p>
+        <div class="formula" style="margin-top:1rem;">
+          <div class="formula-item" style="background:#fff;color:var(--forest)">⏱️ 5-min Pause</div>
+          <div class="formula-plus">+</div>
+          <div class="formula-item" style="background:#fff;color:var(--forest)">🚶 Short Walk</div>
+          <div class="formula-plus">+</div>
+          <div class="formula-item" style="background:#fff;color:var(--forest)">💧 Water</div>
+          <div class="formula-plus">+</div>
+          <div class="formula-item" style="background:#fff;color:var(--forest)">📔 Journal</div>
+          <div class="formula-plus">=</div>
+          <div class="formula-item" style="background:var(--lime);color:var(--forest);font-weight:700;">✅ Control Back</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 14: WHEN TO SEE DOCTOR -->
+<section class="section" id="doctor">
+  <div class="container">
+    <div class="section-title reveal">
+      <div class="tag">Section 14</div>
+      <h2>Kab Doctor Se Milna Zaroori Hai?</h2>
+      <p>In symptoms ko ignore na karein — early check-up best hai</p>
+    </div>
+
+    <div class="grid-2 reveal">
+      <div class="card" style="border-left:5px solid var(--coral)">
+        <h4 style="font-family:'Baloo 2';color:var(--rose);font-size:1.05rem;">🚨 Red Flag Symptoms</h4>
+        <ul style="margin-top:0.8rem;list-style:none;display:flex;flex-direction:column;gap:0.5rem;color:var(--muted);font-size:0.9rem;">
+          <li>• Semen mein blood dikhna</li>
+          <li>• Testicle pain jo 24 ghante se zyaada rahe</li>
+          <li>• Burning urination ya repeated UTI symptoms</li>
+          <li>• Erectile problem jo 3+ mahine tak continue ho</li>
+          <li>• Severe anxiety, compulsive behavior, guilt/depression</li>
+        </ul>
+      </div>
+
+      <div class="card" style="border-left:5px solid var(--emerald)">
+        <h4 style="font-family:'Baloo 2';color:var(--emerald);font-size:1.05rem;">🩺 Kis Specialist Se Milen?</h4>
+        <ul style="margin-top:0.8rem;list-style:none;display:flex;flex-direction:column;gap:0.5rem;color:var(--muted);font-size:0.9rem;">
+          <li>• Urologist: pain, swelling, semen/urine issues</li>
+          <li>• Andrologist: male fertility and hormones</li>
+          <li>• Dermatologist: acne/skin pigmentation issues</li>
+          <li>• Psychiatrist/Psychologist: anxiety, compulsive habits</li>
+          <li>• Dietitian: recovery-focused meal personalization</li>
+        </ul>
+      </div>
+    </div>
+
+    <div style="margin-top:1.4rem;" class="reveal">
+      <div class="highlight-box">
+        <h3>✅ Early Consultation = Better Recovery</h3>
+        <p>Self-diagnosis se bachhein. Agar symptoms persistent hain, to 1 professional visit aapki uncertainty aur stress dono kam kar sakti hai.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+<!-- SECTION 15: LEGAL & TERMS -->
+<section class="section section-alt" id="legal">
+  <div class="container">
+    <div class="section-title reveal">
+      <div class="tag">Section 15</div>
+      <h2>Disclaimer, Terms & Privacy Notes</h2>
+      <p>Public users ke liye clear legal aur safety guidelines</p>
+    </div>
+
+    <div class="grid-2 reveal">
+      <div class="card" style="border-left:5px solid var(--amber)">
+        <h3 style="font-family:'Baloo 2';color:var(--forest);font-size:1.15rem;">⚠️ Medical Disclaimer</h3>
+        <ul style="margin-top:0.8rem;list-style:none;display:flex;flex-direction:column;gap:0.45rem;color:var(--muted);font-size:0.9rem;line-height:1.7;">
+          <li>• Yeh website educational information provide karti hai; diagnosis ya treatment prescribe nahi karti.</li>
+          <li>• Emergency symptoms (severe pain, bleeding, fever, suicidal thoughts) mein turant nearest hospital/doctor se contact karein.</li>
+          <li>• Supplements, herbs, ya home remedies start karne se pehle licensed doctor se consult karein.</li>
+          <li>• Individual health conditions alag hoti hain; generalized content ko personal medical advice na samjhein.</li>
+        </ul>
+      </div>
+
+      <div class="card" style="border-left:5px solid var(--sky)">
+        <h3 style="font-family:'Baloo 2';color:var(--forest);font-size:1.15rem;">📜 Terms of Use (T&C)</h3>
+        <ul style="margin-top:0.8rem;list-style:none;display:flex;flex-direction:column;gap:0.45rem;color:var(--muted);font-size:0.9rem;line-height:1.7;">
+          <li>• Content ka use personal learning ke liye karein; commercial reuse ke liye prior permission required hai.</li>
+          <li>• Website par di gayi tips follow karna user ki responsibility par hai; outcomes person-to-person vary karte hain.</li>
+          <li>• Harmful, abusive, ya misleading reposting strictly prohibited hai.</li>
+          <li>• Site content time-to-time update ho sakta hai; latest guidance ke liye regular review karein.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div style="margin-top:1.4rem;" class="reveal">
+      <div class="card" style="border-left:5px solid var(--emerald)">
+        <h3 style="font-family:'Baloo 2';color:var(--forest);font-size:1.15rem;">🔐 Privacy & Safety Notes</h3>
+        <p style="font-size:0.9rem;color:var(--muted);line-height:1.8;margin-top:0.6rem;">Is static page par koi sign-up form ya personal-health-data collection module intentionally include nahi kiya gaya. Agar aap is site ka extended version deploy karte hain (forms, analytics, comments, chat), to clear privacy policy, consent banner, secure data handling (HTTPS), and age-appropriate safeguards mandatory hone chahiye. Sensitive sexual-health topics ke context mein dignity, consent, and non-judgmental language follow karna essential hai.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div style="margin-bottom:0.8rem; opacity:0.9;">📌 Reminder: Consent, respect aur safety har healthy relationship ka base hai.</div>
+  <strong>🌿 SwasthyaSetu Wellness Guide</strong>
+  <div class="disclaimer">
+    ⚠️ Yeh website sirf educational purposes ke liye hai. Yeh medical, legal, psychological, ya emergency advice ka replacement nahi hai. Kisi bhi specific health problem, mental distress, sexual dysfunction, fertility concern, ya medication decision ke liye qualified doctor/healthcare professional se milna zaroori hai.
+  </div>
+</footer>
+
+<button class="back-top" type="button" id="backTop" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+  // Progress bar
+  window.addEventListener('scroll', () => {
+    const scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+    document.getElementById('progress').style.width = scrolled + '%';
+    document.getElementById('backTop').classList.toggle('visible', window.scrollY > 400);
+  });
+
+  // Reveal on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // FAQ toggle
+  function toggleFaq(el) {
+    const answer = el.nextElementSibling;
+    const isOpen = el.getAttribute('aria-expanded') === 'true';
+    document.querySelectorAll('.faq-q').forEach(q => {
+      q.setAttribute('aria-expanded', 'false');
+      q.nextElementSibling.classList.remove('show');
+    });
+    if (!isOpen) {
+      el.setAttribute('aria-expanded', 'true');
+      answer.classList.add('show');
+    }
+  }
+</script>
+</body>
+</html>
